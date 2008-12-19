@@ -11,6 +11,14 @@ Sends new entries for configured RSS feeds as e-mail to any number of
 recipients. See <tt>example/</tt> directory for a sample configuration file.
 
 
+== LINKS
+
+<b></b>
+Documentation::     <http://rss2mail.rubyforge.org/>
+Source code::       <http://github.com/blackwinter/rss2mail>
+Rubyforge project:: <http://rubyforge.org/projects/rss2mail>
+
+
 == AUTHORS
 
 * Jens Wille <mailto:ww@blackwinter.de>
