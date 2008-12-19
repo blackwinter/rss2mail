@@ -1,0 +1,104 @@
+#! /usr/bin/ruby
+
+#--
+###############################################################################
+#                                                                             #
+# rss2mail -- Send RSS feeds as e-mail                                        #
+#                                                                             #
+# Copyright (C) 2007-2008 Jens Wille                                          #
+#                                                                             #
+# Authors:                                                                    #
+#     Jens Wille <ww@blackwinter.de>                                          #
+#                                                                             #
+# rss2mail is free software; you can redistribute it and/or modify it under   #
+# the terms of the GNU General Public License as published by the Free        #
+# Software Foundation; either version 3 of the License, or (at your option)   #
+# any later version.                                                          #
+#                                                                             #
+# rss2mail is distributed in the hope that it will be useful, but WITHOUT ANY #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS   #
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more       #
+# details.                                                                    #
+#                                                                             #
+# You should have received a copy of the GNU General Public License along     #
+# with rss2mail. If not, see <http://www.gnu.org/licenses/>.                  #
+#                                                                             #
+###############################################################################
+#++
+
+require 'optparse'
+require 'yaml'
+
+base = File.join(File.dirname(__FILE__), '..')
+$: << File.join(base, 'lib')
+
+require 'rss2mail'
+
+USAGE = "Usage: #{$0} [options] <target>"
+abort USAGE if ARGV.empty?
+
+options = {
+  :files   => nil,
+  :reload  => false,
+  :verbose => false
+}
+
+OptionParser.new { |opts|
+  opts.banner = USAGE
+  opts.separator ''
+
+  opts.on('-d', '--directory DIRECTORY', 'Process all feeds in directory') { |d|
+    abort "Not a directory: #{d}"      unless File.directory?(d)
+    abort "Can't read directory: #{d}" unless File.readable?(d)
+
+    options[:files] = Dir[File.join(d, '*.yaml')]
+  }
+
+  opts.on('-r', '--reload', 'Reload feeds') {
+    options[:reload] = true
+  }
+
+  opts.on('-v', '--verbose', 'Be verbose') {
+    options[:verbose] = true
+  }
+}.parse!
+
+if target = ARGV.shift
+  target = target.to_sym
+else
+  abort "No feeds target given\n#{USAGE}"
+end
+
+templates = Hash.new { |h, k|
+  t = File.join(base, 'templates', "#{k}.erb")
+
+  begin
+    h[k] = File.read(t)
+  rescue Errno::ENOENT
+    # silently ignore
+  end
+}
+
+feeds_files = options.delete(:files) || [File.join(base, 'feeds.yaml')]
+feeds_files.each { |feeds_file|
+  feeds = begin
+    YAML.load_file(feeds_file)
+  rescue Errno::ENOENT
+    warn "Feeds file not found: #{feeds_file}"
+    next
+  end
+
+  unless target_feeds = feeds[target]
+    warn "Feeds target not found: #{target} (in #{feeds_file})"
+    next
+  end
+
+  target_feeds.each { |feed|
+    RSS2Mail::Feed.new(feed, options).deliver(templates) unless feed[:skip]
+  }
+
+  # write updated feed information
+  File.open(feeds_file, 'w') { |file|
+    YAML.dump(feeds, file)
+  }
+}

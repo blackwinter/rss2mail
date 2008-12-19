@@ -1,0 +1,30 @@
+--- 
+:"twice-a-day": 
+- :url: http://feeds.feedburner.com/Bildblog
+  :to: my.secret@e.mail
+  :title: BILDblog
+- :url: http://newsfeed.zeit.de/
+  :to: my.secret@e.mail
+  :title: DIE ZEIT
+- :url: http://www.spiegel.de/schlagzeilen/rss/index.xml
+  :to: my.secret@e.mail
+  :title: SPIEGEL ONLINE
+:hourly: 
+- :url: http://www.heise.de/newsticker/heise-atom.xml
+  :to: my.secret@e.mail
+  :title: heise online News
+  :body: heisetext
+  :body_encoding: ISO-8859-1
+- :url: http://log.netbib.de/feed/
+  :to: my.secret@e.mail
+  :title: netbib weblog
+:daily: 
+- :url: http://aktuell.de.selfhtml.org/weblog/rss-feed
+  :to: my.secret@e.mail
+  :title: SELFHTML Aktuell Weblog
+- :url: http://rss.slashdot.org/Slashdot/slashdotLinux
+  :to: my.secret@e.mail
+  :title: "Slashdot: Linux"
+- :url: http://rss.slashdot.org/Slashdot/slashdotBookReviews
+  :to: my.secret@e.mail
+  :title: "Slashdot: Book Reviews"
