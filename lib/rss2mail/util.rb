@@ -3,7 +3,7 @@
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2008 Jens Wille                                          #
+# Copyright (C) 2007-2009 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <ww@blackwinter.de>                                          #

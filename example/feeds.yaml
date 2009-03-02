@@ -28,3 +28,8 @@
 - :url: http://rss.slashdot.org/Slashdot/slashdotBookReviews
   :to: my.secret@e.mail
   :title: "Slashdot: Book Reviews"
+:test: 
+- :url: http://github.com/blackwinter.atom
+  :to: my.secret@e.mail
+  :title: GitHub/blackwinter
+  :unescape_html: true

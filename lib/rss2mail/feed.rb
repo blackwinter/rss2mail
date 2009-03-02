@@ -3,7 +3,7 @@
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2008 Jens Wille                                          #
+# Copyright (C) 2007-2009 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <ww@blackwinter.de>                                          #
@@ -28,9 +28,6 @@ require 'open-uri'
 require 'erb'
 
 require 'rubygems'
-require 'hpricot'
-require 'unidecode'
-require 'nuggets/util/i18n'
 require 'nuggets/string/evaluate'
 
 require 'rss2mail/rss'
@@ -39,17 +36,9 @@ module RSS2Mail
 
   class Feed
 
-    SUBSTITUTIONS = {
-      '–'     => '--',
-      '«'     => '<<',
-      '&amp;' => '&'
-    }
+    HOST = ENV['HOSTNAME'] || ENV['HOST'] || %x{hostname}.chomp
 
-    SUBSTITUTIONS_RE = %r{Regexp.union(*SUBSTITUTIONS.keys)}o
-
-    TAGS_TO_KEEP = %w[a p br h1 h2 h3 h4]
-
-    attr_reader :feed, :verbose, :reload, :simple, :updated, :content, :rss
+    attr_reader :feed, :reload, :verbose, :debug, :simple, :updated, :content, :rss
 
     def initialize(feed, options = {})
       raise TypeError, "Hash expected, got #{feed.class}" unless feed.is_a?(Hash)
@@ -58,33 +47,34 @@ module RSS2Mail
       @simple  = feed[:simple]
       @updated = feed[:updated]
 
-      @verbose = options[:verbose]
       @reload  = options[:reload]
+      @verbose = options[:verbose]
+      @debug   = options[:debug]
 
       required = [:url, :to, :title]
       required.delete_if { |i| feed.has_key?(i) }
 
-      raise ArgumentError, "feed incomplete: #{required.join(', ')} missing" unless required.empty?
+      raise ArgumentError, "Feed incomplete: #{required.join(', ')} missing" unless required.empty?
     end
 
     def deliver(templates)
+      to = [*feed[:to]]
+
+      if to.empty?
+        log 'No one to send to'
+        return
+      end
+
       unless get && parse
-        warn "[#{feed[:title]}] Nothing to send" if verbose
+        log 'Nothing to send'
         return
       end
 
       if rss.items.empty?
-        warn "[#{feed[:title]}] No new items" if verbose
+        log 'No new items'
         return
       end
 
-      to = [*feed[:to]]
-      if to.empty?
-        warn "[#{feed[:title]}] No one to send to" if verbose
-        return
-      end
-
-      feed_title   = feed[:title]
       content_type = feed[:content_type] || 'text/html'
       encoding     = feed[:encoding]     || 'UTF-8'
 
@@ -93,7 +83,7 @@ module RSS2Mail
       content_type_header = "Content-type: #{content_type}; charset=#{encoding}"
 
       unless template = templates[content_type[/\/(.*)/, 1]]
-        warn "[#{feed[:title]}] Template not found: #{content_type}" if verbose
+        log "Template not found: #{content_type}"
         return
       end
 
@@ -101,8 +91,8 @@ module RSS2Mail
         '/usr/bin/mail',
         '-e',
         "-a '#{content_type_header}'",
-        "-a 'From: rss2mail@blackwinter.de'",
-        "-s '[#{feed_title}] \#{subject}'",
+        "-a 'From: rss2mail@#{HOST}'",
+        "-s '[#{feed[:title]}] \#{subject}'",
         *to
       ].join(' ')
 
@@ -111,45 +101,25 @@ module RSS2Mail
       rss.items.each { |item|
         title       = item.title
         link        = item.link
-        description = item.description
+        description = item.description(feed[:unescape_html])
         date        = item.date
         author      = item.author
+        body        = item.body(feed[:body])
+        subject     = item.subject
 
-        if description && feed[:unescape_html]
-          description.gsub!(/&lt;/, '<')
-          description.gsub!(/&gt;/, '>')
-        end
+        log "#{title} / #{date} [#{author}]", debug
+        log "<#{link}>", debug
 
-        if tag = feed[:body]
-          body = case tag
-            when true: open(link).read
-            else       Hpricot(open(link)).at(tag).to_s
-          end.gsub(/<\/?(.*?)>/) { |m|
-            m if TAGS_TO_KEEP.include?($1.split.first.downcase)
-          }.gsub(/<a\s+href=['"](?!http:).*?>(.*?)<\/a>/mi, '\1')
-
-          if body_encoding = feed[:body_encoding]
-            body = Iconv.conv('UTF-8', body_encoding, body)
-          end
-        end
-
-        subject = title ? clean_subject(title) : 'NO TITLE'
-
-        _cmd = cmd.evaluate(binding)
-
-        begin
-          IO.popen(_cmd, 'w') { |mail| mail.puts ERB.new(template).result(binding) }
+        send_mail(cmd.evaluate(binding), ERB.new(template).result(binding)) {
           feed[:sent] << link
           sent += 1
-        rescue Errno::EPIPE => err
-          warn "[#{feed[:title]}] Error while sending mail (#{err.class}): #{_cmd}"
-        end
+        }
       }
 
       # only keep the last 100 entries
       feed[:sent].slice!(0...-100)
 
-      warn "[#{feed[:title]}] #{sent} items sent" if verbose
+      log "#{sent} items sent"
       sent
     end
 
@@ -161,26 +131,30 @@ module RSS2Mail
         conditions = {}
       else
         conditions = case
-          when etag  = feed[:etag]:  { 'If-None-Match'     => etag  }
-          when mtime = feed[:mtime]: { 'If-Modified-Since' => mtime }
-          else                         {}
+          when etag  = feed[:etag]  then { 'If-None-Match'     => etag  }
+          when mtime = feed[:mtime] then { 'If-Modified-Since' => mtime }
+          else                           {}
         end
       end
+
+      log conditions.inspect, debug
 
       begin
         open(feed[:url], conditions) { |uri|
           case
-            when etag  = uri.meta['etag']:  feed[:etag]    = etag
-            when mtime = uri.last_modified: feed[:mtime]   = mtime.rfc822
-            else                            feed[:updated] = Time.now
+            when etag  = uri.meta['etag']  then feed[:etag]    = etag
+            when mtime = uri.last_modified then feed[:mtime]   = mtime.rfc822
+            else                                feed[:updated] = Time.now
           end
 
           @content ||= uri.read
         }
+
+        log feed.values_at(:etag, :mtime, :updated).inspect, debug
       rescue OpenURI::HTTPError
-        warn "[#{feed[:title]}] Feed not found or unchanged" if verbose
+        log 'Feed not found or unchanged'
       rescue Timeout::Error, Errno::ETIMEDOUT, Errno::ECONNRESET => err
-        warn "[#{feed[:title]}] Error while getting feed: #{err} (#{err.class})"
+        error err, 'while getting feed'
       end
 
       @content
@@ -192,7 +166,7 @@ module RSS2Mail
       if content && @rss ||= begin
         RSS2Mail::RSS.new(content, simple)
       rescue SimpleRSSError => err
-        warn "[#{feed[:title]}] Error while parsing feed: #{err} (#{err.class})"
+        error err, 'while parsing feed'
       end
         sent = feed[:sent]
 
@@ -206,18 +180,33 @@ module RSS2Mail
           }
         end
       else
-        warn "[#{feed[:title]}] Nothing to parse" if verbose
+        log 'Nothing to parse'
       end
 
       @rss
     end
 
-    def clean_subject(string)
-      string.
-        replace_diacritics.
-        gsub(SUBSTITUTIONS_RE) { |m| SUBSTITUTIONS[m] }.
-        to_ascii.
-        gsub(/'/, "'\\\\''")
+    def send_mail(cmd, body)
+      return if debug
+
+      IO.popen(cmd, 'w') { |mail| mail.puts body }
+      yield if block_given?
+    rescue Errno::EPIPE => err
+      error err, 'while sending mail', cmd
+    end
+
+    def log(msg, verbose = verbose)
+      warn "[#{feed[:title]}] #{msg}" if verbose
+    end
+
+    def error(err = nil, occasion = nil, extra = nil)
+      msg = 'Error'
+
+      msg << " #{occasion}"            if occasion
+      msg << ": #{err} (#{err.class})" if err
+      msg << " [#{extra}]"             if extra
+
+      log msg, true
     end
 
   end

@@ -1,9 +1,11 @@
+# encoding: utf-8
+
 #--
 ###############################################################################
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2008 Jens Wille                                          #
+# Copyright (C) 2007-2009 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <ww@blackwinter.de>                                          #
@@ -24,14 +26,33 @@
 ###############################################################################
 #++
 
+require 'open-uri'
 require 'rss'
 
 require 'rubygems'
 require 'simple-rss'
+require 'unidecode'
+require 'nuggets/util/i18n'
+
+begin
+  require 'hpricot'
+rescue LoadError => err
+  warn err
+end
 
 module RSS2Mail
 
   class RSS
+
+    SUBSTITUTIONS = {
+      '–'     => '--',
+      '«'     => '<<',
+      '&amp;' => '&'
+    }
+
+    SUBSTITUTIONS_RE = Regexp.union(*SUBSTITUTIONS.keys)
+
+    TAGS_TO_KEEP = %w[a p br h1 h2 h3 h4]
 
     attr_reader :content, :rss
 
@@ -60,32 +81,100 @@ module RSS2Mail
 
     class Item
 
-      ALIASES = {
-        :title       => %w[],
-        :link        => %w[],
-        :description => %w[summary content],
-        :date        => %w[pubDate updated],
-        :author      => %w[dc_creator]
-      }
-
       def initialize(item)
         @item = item
       end
 
-      def method_missing(method, *args, &block)
-        if aliases = ALIASES[method]
-          [method, *aliases].each { |name|
-            begin
-              res = @item.send(name)
-              return res if res
-            rescue NoMethodError
-            end
-          }
+      def title
+        @title ||= value_for(:title, :content)
+      end
 
-          nil
-        else
-          super
+      def link
+        @link ||= value_for(:link, :href)
+      end
+
+      def description(unescape_html = false)
+        @description ||= get_description(unescape_html)
+      end
+
+      def date
+        @date ||= value_for({ :date => %w[pubDate updated dc_date] }, :content) { |field, value|
+          field == 'updated' && value.respond_to?(:content) ? Time.at(value.content.to_i) : value
+        }
+      end
+
+      def author
+        @author ||= value_for({ :author => %w[contributor dc_creator] }, %w[name content])
+      end
+
+      def body(tag = nil, encoding = nil)
+        @body ||= get_body(tag, encoding)
+      end
+
+      def subject
+        @subject ||= title ? clean_subject(title) : 'NO TITLE'
+      end
+
+      private
+
+      def value_for(field, methods = nil, &block)
+        value = get_value_for(field, &block)
+
+        if methods
+          [*methods].each { |method|
+            break unless value.respond_to?(method)
+            value = value.send(method)
+          }
         end
+
+        value.respond_to?(:strip) ? value.strip : value
+      end
+
+      def get_value_for(fields, &block)
+        fields = fields.is_a?(Hash) ? fields.to_a.flatten : [*fields]
+
+        fields.each { |field|
+          begin
+            value = @item.send(field)
+            value = block[field, value] if block
+            return value if value
+          rescue NoMethodError
+          end
+        }
+
+        nil
+      end
+
+      def get_description(unescape_html)
+        description = value_for({ :description => %w[summary content] }, :content)
+
+        if description && unescape_html
+          description.gsub!(/&lt;/, '<')
+          description.gsub!(/&gt;/, '>')
+        end
+
+        description
+      end
+
+      def get_body(tag, encoding)
+        body = case tag
+          when nil  then return
+          when true then open(link).read
+          else           defined?(Hpricot) ? Hpricot(open(link)).at(tag).to_s : open(link).read
+        end
+
+        body.gsub!(/<\/?(.*?)>/) { |m| m if TAGS_TO_KEEP.include?($1.split.first.downcase) }
+        body.gsub!(/<a\s+href=['"](?!http:).*?>(.*?)<\/a>/mi, '\1')
+
+        encoding ? Iconv.conv('UTF-8', encoding, body) : body
+      end
+
+      def clean_subject(string)
+        string.
+          replace_diacritics.
+          gsub(SUBSTITUTIONS_RE) { |m| SUBSTITUTIONS[m] }.
+          to_ascii.
+          gsub(/'/, "'\\\\''")
       end
 
     end

@@ -5,7 +5,7 @@
 #                                                                             #
 # rss2mail -- Send RSS feeds as e-mail                                        #
 #                                                                             #
-# Copyright (C) 2007-2008 Jens Wille                                          #
+# Copyright (C) 2007-2009 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <ww@blackwinter.de>                                          #
@@ -40,7 +40,8 @@ abort USAGE if ARGV.empty?
 options = {
   :files   => nil,
   :reload  => false,
-  :verbose => false
+  :verbose => false,
+  :debug   => false
 }
 
 OptionParser.new { |opts|
@@ -61,6 +62,10 @@ OptionParser.new { |opts|
   opts.on('-v', '--verbose', 'Be verbose') {
     options[:verbose] = true
   }
+
+  opts.on('-D', '--debug', "Print debug output and don't send any mails") {
+    options[:debug] = true
+  }
 }.parse!
 
 if target = ARGV.shift
@@ -70,16 +75,15 @@ else
 end
 
 templates = Hash.new { |h, k|
-  t = File.join(base, 'templates', "#{k}.erb")
-
-  begin
-    h[k] = File.read(t)
+  h[k] = begin
+    File.read(File.join(base, 'templates', "#{k}.erb"))
   rescue Errno::ENOENT
     # silently ignore
   end
 }
 
 feeds_files = options.delete(:files) || [File.join(base, 'feeds.yaml')]
+
 feeds_files.each { |feeds_file|
   feeds = begin
     YAML.load_file(feeds_file)
@@ -98,7 +102,5 @@ feeds_files.each { |feeds_file|
   }
 
   # write updated feed information
-  File.open(feeds_file, 'w') { |file|
-    YAML.dump(feeds, file)
-  }
+  File.open(feeds_file, 'w') { |file| YAML.dump(feeds, file) } unless options[:debug]
 }
