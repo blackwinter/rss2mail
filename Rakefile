@@ -15,7 +15,7 @@ begin
       :summary      => %q{Send RSS feeds as e-mail},
       :homepage     => %q{http://rss2mail.rubyforge.org/},
       :files        => FileList['lib/**/*.rb', 'bin/*'].to_a,
-      :extra_files  => FileList['[A-Z]*', 'example/*'].to_a,
+      :extra_files  => FileList['[A-Z]*', 'templates/*', 'example/*'].to_a,
       :dependencies => %w[simple-rss hpricot unidecode ruby-nuggets]
     }
   }}

@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = %q{jens.wille@uni-koeln.de}
   s.executables = ["rss2mail"]
   s.extra_rdoc_files = ["COPYING", "ChangeLog", "README"]
-  s.files = ["lib/rss2mail/rss.rb", "lib/rss2mail/version.rb", "lib/rss2mail/util.rb", "lib/rss2mail/feed.rb", "lib/rss2mail.rb", "bin/rss2mail", "Rakefile", "COPYING", "ChangeLog", "README", "example/feeds.yaml"]
+  s.files = ["lib/rss2mail/rss.rb", "lib/rss2mail/version.rb", "lib/rss2mail/util.rb", "lib/rss2mail/feed.rb", "lib/rss2mail.rb", "bin/rss2mail", "Rakefile", "COPYING", "ChangeLog", "README", "templates/plain.erb", "templates/html.erb", "example/feeds.yaml"]
   s.has_rdoc = true
   s.homepage = %q{http://rss2mail.rubyforge.org/}
   s.rdoc_options = ["--line-numbers", "--main", "README", "--inline-source", "--title", "rss2mail Application documentation", "--charset", "UTF-8", "--all"]
