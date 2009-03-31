@@ -28,6 +28,7 @@ require 'open-uri'
 require 'erb'
 
 require 'rubygems'
+require 'nuggets/file/which'
 require 'nuggets/string/evaluate'
 
 require 'rss2mail/rss'
@@ -58,6 +59,10 @@ module RSS2Mail
     end
 
     def deliver(templates)
+      unless mail_cmd = File.which(_mail_cmd = 'mail')
+        raise "Mail command not found: #{_mail_cmd}"
+      end
+
       to = [*feed[:to]]
 
       if to.empty?
@@ -88,7 +93,7 @@ module RSS2Mail
       end
 
       cmd = [
-        '/usr/bin/mail',
+        mail_cmd,
         '-e',
         "-a '#{content_type_header}'",
         "-a 'From: rss2mail@#{HOST}'",
