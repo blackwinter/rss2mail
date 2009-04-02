@@ -13,11 +13,13 @@
 - :url: http://www.heise.de/newsticker/heise-atom.xml
   :to: my.secret@e.mail
   :title: heise online News
-  :body: heisetext
+  #:body: heisetext
+  :body: ['meta[@name=description]', 'content']
   :body_encoding: ISO-8859-1
 - :url: http://log.netbib.de/feed/
   :to: my.secret@e.mail
   :title: netbib weblog
+  :skip: true
 :daily: 
 - :url: http://aktuell.de.selfhtml.org/weblog/rss-feed
   :to: my.secret@e.mail

@@ -158,15 +158,26 @@ module RSS2Mail
 
       def get_body(tag, encoding)
         body = case tag
-          when nil  then return
-          when true then open(link).read
-          else           defined?(Hpricot) ? Hpricot(open(link)).at(tag).to_s : open(link).read
+          when nil    then return
+          when true   then open(link).read
+          when String then extract_body(tag)
+          when Array  then extract_body(*tag)
+          else raise ArgumentError, "don't know how to handle tag of type #{tag.class}"
         end
 
         body.gsub!(/<\/?(.*?)>/) { |m| m if TAGS_TO_KEEP.include?($1.split.first.downcase) }
         body.gsub!(/<a\s+href=['"](?!http:).*?>(.*?)<\/a>/mi, '\1')
 
         encoding ? Iconv.conv('UTF-8', encoding, body) : body
+      end
+
+      def extract_body(expr, attribute = nil)
+        if defined?(Hpricot)
+          elem = Hpricot(open(link)).at(expr)
+          attribute ? elem[attribute] : elem.to_s
+        else
+          open(link).read
+        end
       end
 
       def clean_subject(string)
