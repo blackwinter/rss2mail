@@ -25,6 +25,7 @@
 #++
 
 require 'rss2mail/feed'
+require 'rss2mail/version'
 
 module RSS2Mail
 end

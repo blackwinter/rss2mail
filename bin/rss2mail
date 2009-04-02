@@ -66,6 +66,14 @@ OptionParser.new { |opts|
   opts.on('-D', '--debug', "Print debug output and don't send any mails") {
     options[:debug] = true
   }
+
+  opts.on('-h', '--help', 'Print this help message and exit') {
+    abort opts.to_s
+  }
+
+  opts.on('--version', 'Print program version and exit') {
+    abort "#{File.basename($0)} v#{RSS2Mail::VERSION}"
+  }
 }.parse!
 
 if target = ARGV.shift
