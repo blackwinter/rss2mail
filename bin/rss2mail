@@ -29,7 +29,10 @@
 require 'optparse'
 require 'yaml'
 
-base = File.join(File.dirname(__FILE__), '..')
+require 'rubygems'
+require 'nuggets/env/user_home'
+
+base = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 $: << File.join(base, 'lib')
 
 require 'rss2mail'
@@ -90,7 +93,11 @@ templates = Hash.new { |h, k|
   end
 }
 
-feeds_files = options.delete(:files) || [File.join(base, 'feeds.yaml')]
+feeds_files = options.delete(:files) || if File.directory?(d = File.join(ENV.user_home, '.rss2mail'))
+  Dir[File.join(d, '*.yaml')]
+else
+  [File.join(base, 'feeds.yaml')]
+end
 
 feeds_files.each { |feeds_file|
   feeds = begin
