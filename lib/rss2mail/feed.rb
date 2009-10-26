@@ -122,6 +122,7 @@ module RSS2Mail
       }
 
       # only keep the last 100 entries
+      feed[:sent].uniq!
       feed[:sent].slice!(0...-100)
 
       log "#{sent} items sent"
@@ -131,14 +132,17 @@ module RSS2Mail
     private
 
     def get(reload = reload)
+      conditions = {}
+
       if reload
         @content = nil
-        conditions = {}
       else
-        conditions = case
-          when etag  = feed[:etag]  then { 'If-None-Match'     => etag  }
-          when mtime = feed[:mtime] then { 'If-Modified-Since' => mtime }
-          else                           {}
+        if etag = feed[:etag]
+          conditions['If-None-Match'] = etag
+        end
+
+        if mtime = feed[:mtime]
+          conditions['If-Modified-Since'] = mtime
         end
       end
 
@@ -146,10 +150,16 @@ module RSS2Mail
 
       begin
         open(feed[:url], conditions) { |uri|
-          case
-            when etag  = uri.meta['etag']  then feed[:etag]    = etag
-            when mtime = uri.last_modified then feed[:mtime]   = mtime.rfc822
-            else                                feed[:updated] = Time.now
+          if etag = uri.meta['etag']
+            feed[:etag] = etag
+          end
+
+          if mtime = uri.last_modified
+            feed[:mtime] = mtime.rfc822
+          end
+
+          unless etag || mtime
+            feed[:updated] = Time.now
           end
 
           @content ||= uri.read
