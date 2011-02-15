@@ -1,26 +1,22 @@
-require %q{lib/rss2mail/version}
+require File.expand_path(%q{../lib/rss2mail/version}, __FILE__)
 
 begin
   require 'hen'
 
   Hen.lay! {{
     :rubyforge => {
-      :project  => %q{rss2mail},
-      :package  => %q{rss2mail},
-      :rdoc_dir => nil
+      :project => %q{rss2mail}
     },
 
     :gem => {
       :version      => RSS2Mail::VERSION,
       :summary      => %q{Send RSS feeds as e-mail},
-      :homepage     => %q{http://rss2mail.rubyforge.org/},
-      :files        => FileList['lib/**/*.rb', 'bin/*'].to_a,
-      :extra_files  => FileList['[A-Z]*', 'templates/*', 'example/*'].to_a,
+      :author       => %q{Jens Wille},
+      :email        => %q{ww@blackwinter.de},
+      :extra_files  => FileList['templates/*'].to_a,
       :dependencies => %w[simple-rss hpricot unidecode ruby-nuggets]
     }
   }}
-rescue LoadError
-  abort "Please install the 'hen' gem first."
+rescue LoadError => err
+  warn "Please install the `hen' gem. (#{err})"
 end
-
-### Place your custom Rake tasks here.
