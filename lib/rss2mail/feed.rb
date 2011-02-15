@@ -168,7 +168,7 @@ module RSS2Mail
         log feed.values_at(:etag, :mtime, :updated).inspect, debug
       rescue OpenURI::HTTPError
         log 'Feed not found or unchanged'
-      rescue Timeout::Error, Errno::ETIMEDOUT, Errno::ECONNRESET => err
+      rescue Exception => err
         error err, 'while getting feed'
       end
 
