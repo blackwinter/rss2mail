@@ -221,6 +221,8 @@ module RSS2Mail
       msg << ": #{err} (#{err.class})" if err
       msg << " [#{extra}]"             if extra
 
+      msg = [msg, *err.backtrace].join("\n    ") if debug
+
       log msg, true
     end
 
