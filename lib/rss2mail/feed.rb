@@ -154,7 +154,7 @@ module RSS2Mail
             feed[:etag] = etag
           end
 
-          if mtime = uri.last_modified
+          if mtime = begin; uri.last_modified; rescue ArgumentError; end
             feed[:mtime] = mtime.rfc822
           end
 
