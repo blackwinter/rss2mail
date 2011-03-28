@@ -1,9 +1,9 @@
-Tue, 15 Feb 2011 11:55:35 +0100
+Mon, 28 Mar 2011 09:49:14 +0200
 lib/rss2mail.rb	Thu, 17 Dec 2009 17:53:22 +0100
-lib/rss2mail/version.rb	Tue, 15 Feb 2011 11:49:11 +0100
+lib/rss2mail/version.rb	Mon, 28 Mar 2011 09:48:03 +0200
 COPYING	Thu, 17 Dec 2009 17:53:22 +0100
 lib/rss2mail/util.rb	Thu, 17 Dec 2009 17:53:22 +0100
-README	Tue, 15 Feb 2011 11:49:01 +0100
-lib/rss2mail/feed.rb	Tue, 15 Feb 2011 11:43:44 +0100
+README	Mon, 28 Mar 2011 09:47:49 +0200
+lib/rss2mail/feed.rb	Mon, 28 Mar 2011 09:45:06 +0200
 lib/rss2mail/rss.rb	Thu, 17 Dec 2009 17:53:22 +0100
 ChangeLog	Thu, 17 Dec 2009 17:53:22 +0100
