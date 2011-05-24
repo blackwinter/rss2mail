@@ -24,10 +24,8 @@
 ###############################################################################
 #++
 
-require 'open-uri'
 require 'uri'
-
-require 'rubygems'
+require 'open-uri'
 require 'hpricot'
 
 module RSS2Mail

@@ -26,10 +26,8 @@
 ###############################################################################
 #++
 
-require 'open-uri'
 require 'rss'
-
-require 'rubygems'
+require 'open-uri'
 require 'simple-rss'
 require 'unidecode'
 require 'nuggets/util/i18n'

@@ -24,10 +24,7 @@
 ###############################################################################
 #++
 
-require 'open-uri'
 require 'erb'
-
-require 'rubygems'
 require 'nuggets/file/which'
 require 'nuggets/string/evaluate'
 

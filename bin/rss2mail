@@ -26,16 +26,13 @@
 ###############################################################################
 #++
 
-require 'optparse'
 require 'yaml'
-
-require 'rubygems'
+require 'optparse'
 require 'nuggets/env/user_home'
 
-base = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-$: << File.join(base, 'lib')
-
 require 'rss2mail'
+
+base = File.expand_path('../..', __FILE__)
 
 USAGE = "Usage: #{$0} [options] <target>"
 abort USAGE if ARGV.empty?
