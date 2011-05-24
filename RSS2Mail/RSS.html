@@ -77,6 +77,8 @@
           
           <li><a href="#method-c-new">::new</a></li>
           
+          <li><a href="#method-c-parse">::parse</a></li>
+          
           <li><a href="#method-i-items">#items</a></li>
           
           <li><a href="#method-i-parse">#parse</a></li>
@@ -246,7 +248,7 @@
             
             <div class="method-source-code" id="new-source">
 <pre>
-<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 58</span>
+<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 60</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">content</span>, <span class="ruby-identifier">simple</span> = <span class="ruby-keyword">false</span>)
   <span class="ruby-ivar">@content</span> = <span class="ruby-identifier">content</span>
   <span class="ruby-ivar">@simple</span>  = <span class="ruby-identifier">simple</span>
@@ -261,6 +263,39 @@
 
           
         </div><!-- new-method -->
+
+      
+        <div id="parse-method" class="method-detail ">
+          <a name="method-c-parse"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">parse</span><span
+              class="method-args">(url, *args)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="parse-source">
+<pre>
+<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">url</span>, *<span class="ruby-identifier">args</span>)
+  <span class="ruby-identifier">new</span>(<span class="ruby-identifier">open</span>(<span class="ruby-identifier">url</span>), *<span class="ruby-identifier">args</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- parse-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- parse-method -->
 
       
       </div><!-- public-class-method-details -->
@@ -288,7 +323,7 @@
             
             <div class="method-source-code" id="items-source">
 <pre>
-<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 69</span>
+<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 71</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">items</span>
   <span class="ruby-ivar">@items</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">rss</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span> <span class="ruby-constant">Item</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">item</span>) }
 <span class="ruby-keyword">end</span></pre>
@@ -321,7 +356,7 @@
             
             <div class="method-source-code" id="parse-source">
 <pre>
-<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 73</span>
+<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 75</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span>
   <span class="ruby-operator">::</span><span class="ruby-constant">RSS</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">content</span>, <span class="ruby-keyword">false</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">simple_parse</span>
 <span class="ruby-keyword">end</span></pre>
@@ -354,7 +389,7 @@
             
             <div class="method-source-code" id="simple-3F-source">
 <pre>
-<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 65</span>
+<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 67</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">simple?</span>
   <span class="ruby-ivar">@simple</span>
 <span class="ruby-keyword">end</span></pre>
@@ -387,7 +422,7 @@
             
             <div class="method-source-code" id="simple_parse-source">
 <pre>
-<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 77</span>
+<span class="ruby-comment"># File lib/rss2mail/rss.rb, line 79</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">simple_parse</span>
   <span class="ruby-constant">SimpleRSS</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">content</span>)
 <span class="ruby-keyword">end</span></pre>
