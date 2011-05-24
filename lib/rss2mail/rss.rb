@@ -56,6 +56,10 @@ module RSS2Mail
 
     attr_reader :content, :rss
 
+    def self.parse(url, *args)
+      new(open(url), *args)
+    end
+
     def initialize(content, simple = false)
       @content = content
       @simple  = simple
@@ -90,7 +94,9 @@ module RSS2Mail
       end
 
       def link
-        @link ||= value_for(:link, :href)
+        @link ||= value_for([:links, :link], :href) { |field, value|
+          field == :links ? value.find { |link| link.rel == 'alternate' } : value
+        }
       end
 
       def description(unescape_html = false)
