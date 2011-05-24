@@ -2,21 +2,21 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rss2mail}
-  s.version = "0.0.8"
+  s.version = "0.0.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Jens Wille"]
-  s.date = %q{2011-04-29}
+  s.authors = [%q{Jens Wille}]
+  s.date = %q{2011-05-24}
   s.description = %q{Send RSS feeds as e-mail}
   s.email = %q{ww@blackwinter.de}
-  s.executables = ["rss2mail"]
-  s.extra_rdoc_files = ["README", "COPYING", "ChangeLog"]
-  s.files = ["lib/rss2mail.rb", "lib/rss2mail/util.rb", "lib/rss2mail/feed.rb", "lib/rss2mail/version.rb", "lib/rss2mail/rss.rb", "bin/rss2mail", "templates/plain.erb", "templates/html.erb", "README", "ChangeLog", "Rakefile", "COPYING", "example/feeds.yaml"]
+  s.executables = [%q{rss2mail}]
+  s.extra_rdoc_files = [%q{README}, %q{COPYING}, %q{ChangeLog}]
+  s.files = [%q{lib/rss2mail.rb}, %q{lib/rss2mail/util.rb}, %q{lib/rss2mail/feed.rb}, %q{lib/rss2mail/version.rb}, %q{lib/rss2mail/rss.rb}, %q{bin/rss2mail}, %q{templates/plain.erb}, %q{templates/html.erb}, %q{README}, %q{ChangeLog}, %q{Rakefile}, %q{COPYING}, %q{example/feeds.yaml}]
   s.homepage = %q{http://rss2mail.rubyforge.org/}
-  s.rdoc_options = ["--line-numbers", "--main", "README", "--charset", "UTF-8", "--all", "--title", "rss2mail Application documentation (v0.0.8)"]
-  s.require_paths = ["lib"]
+  s.rdoc_options = [%q{--main}, %q{README}, %q{--charset}, %q{UTF-8}, %q{--title}, %q{rss2mail Application documentation (v0.0.9)}, %q{--all}, %q{--line-numbers}]
+  s.require_paths = [%q{lib}]
   s.rubyforge_project = %q{rss2mail}
-  s.rubygems_version = %q{1.7.2}
+  s.rubygems_version = %q{1.8.3}
   s.summary = %q{Send RSS feeds as e-mail}
 
   if s.respond_to? :specification_version then
