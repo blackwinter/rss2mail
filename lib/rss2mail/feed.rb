@@ -177,7 +177,7 @@ module RSS2Mail
 
       if content && @rss ||= begin
         RSS2Mail::RSS.new(content, simple)
-      rescue SimpleRSSError => err
+      rescue ::SimpleRSSError, ::RSS::NotWellFormedError => err
         error err, 'while parsing feed'
       end
         sent = feed[:sent]
