@@ -42,6 +42,8 @@ module RSS2Mail
 
   class RSS
 
+    USER_AGENT = "RSS2Mail/#{VERSION}".freeze
+
     SUBSTITUTIONS = {
       '–'     => '--',
       '«'     => '<<',
@@ -55,7 +57,7 @@ module RSS2Mail
     attr_reader :content, :rss
 
     def self.parse(url, *args)
-      new(open(url), *args)
+      new(open(url, 'User-Agent' => USER_AGENT), *args)
     end
 
     def initialize(content, simple = false)
