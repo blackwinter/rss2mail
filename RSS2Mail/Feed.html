@@ -1,326 +1,298 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+
+<html>
 <head>
-  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-  <title>Class: RSS2Mail::Feed</title>
+<title>class RSS2Mail::Feed - rss2mail Application documentation (v0.1.0)</title>
 
-  <link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
-  <script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
-  <script src="../js/thickbox-compressed.js" type="text/javascript" charset="utf-8"></script>
-  <script src="../js/quicksearch.js" type="text/javascript" charset="utf-8"></script>
-  <script src="../js/darkfish.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
 
-</head>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
 <body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
 
-  <div id="metadata">
-    <div id="home-metadata">
-      <div id="home-section" class="section">
-        <h3 class="section-header">
-          <a href="../index.html">Home</a>
-          <a href="../index.html#classes">Classes</a>
-          <a href="../index.html#methods">Methods</a>
-        </h3>
-      </div>
-    </div>
 
-    <div id="file-metadata">
-      <div id="file-list-section" class="section">
-        <h3 class="section-header">In Files</h3>
-        <div class="section-body">
-          <ul>
-          
-            <li><a href="../lib/rss2mail/feed_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="lib/rss2mail/feed.rb">lib/rss2mail/feed.rb</a></li>
-          
-          </ul>
-        </div>
-      </div>
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
 
-      
-    </div>
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
 
-    <div id="class-metadata">
-      
-      <!-- Parent Class -->
-      <div id="parent-class-section" class="section">
-        <h3 class="section-header">Parent</h3>
-        
-        <p class="link">Object</p>
-        
-      </div>
-      
 
-      
-
-      
-
-      
-      <!-- Method Quickref -->
-      <div id="method-list-section" class="section">
-        <h3 class="section-header">Methods</h3>
-        <ul class="link-list">
-          
-          <li><a href="#method-c-new">::new</a></li>
-          
-          <li><a href="#method-i-deliver">#deliver</a></li>
-          
-          <li><a href="#method-i-error">#error</a></li>
-          
-          <li><a href="#method-i-get">#get</a></li>
-          
-          <li><a href="#method-i-log">#log</a></li>
-          
-          <li><a href="#method-i-parse">#parse</a></li>
-          
-          <li><a href="#method-i-send_mail">#send_mail</a></li>
-          
-        </ul>
-      </div>
-      
-
-      
-    </div>
-
-    <div id="project-metadata">
-      
-      
-      <div id="fileindex-section" class="section project-section">
-        <h3 class="section-header">Files</h3>
-        <ul>
-        
-          <li class="file"><a href="../COPYING.html">COPYING</a></li>
-        
-          <li class="file"><a href="../ChangeLog.html">ChangeLog</a></li>
-        
-          <li class="file"><a href="../README.html">README</a></li>
-        
-        </ul>
-      </div>
-      
-
-      <div id="classindex-section" class="section project-section">
-        <h3 class="section-header">Class/Module Index
-          <span class="search-toggle"><img src="../images/find.png"
-            height="16" width="16" alt="[+]"
-            title="show/hide quicksearch" /></span></h3>
-        <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
-        <fieldset>
-          <legend>Quicksearch</legend>
-          <input type="text" name="quicksearch" value=""
-            class="quicksearch-field" />
-        </fieldset>
-        </form>
-
-        <ul class="link-list">
-        
-          <li><a href="../RSS2Mail.html">RSS2Mail</a></li>
-        
-          <li><a href="../RSS2Mail/Feed.html">RSS2Mail::Feed</a></li>
-        
-          <li><a href="../RSS2Mail/RSS.html">RSS2Mail::RSS</a></li>
-        
-          <li><a href="../RSS2Mail/RSS/Item.html">RSS2Mail::RSS::Item</a></li>
-        
-          <li><a href="../RSS2Mail/Util.html">RSS2Mail::Util</a></li>
-        
-          <li><a href="../RSS2Mail/Version.html">RSS2Mail::Version</a></li>
-        
-        </ul>
-        <div id="no-class-search-results" style="display: none;">No matching classes.</div>
-      </div>
-
-      
-    </div>
-  </div>
-
-  <div id="documentation">
-    <h1 class="class">RSS2Mail::Feed</h1>
-
-    <div id="description" class="description">
-      
-    </div><!-- description -->
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/rss2mail/feed.rb
+  </ul>
+</nav>
 
     
-    <div id="5Buntitled-5D" class="documentation-section">
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">Object
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-new">::new</a>
+    
+    <li><a href="#method-i-deliver">#deliver</a>
+    
+    <li><a href="#method-i-error">#error</a>
+    
+    <li><a href="#method-i-get">#get</a>
+    
+    <li><a href="#method-i-log">#log</a>
+    
+    <li><a href="#method-i-parse">#parse</a>
+    
+    <li><a href="#method-i-send_mail">#send_mail</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../COPYING.html">COPYING</a>
+  
+    <li class="file"><a href="../ChangeLog.html">ChangeLog</a>
+  
+    <li class="file"><a href="../README.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../RSS2Mail.html">RSS2Mail</a>
+  
+    <li><a href="../RSS2Mail/Feed.html">RSS2Mail::Feed</a>
+  
+    <li><a href="../RSS2Mail/RSS.html">RSS2Mail::RSS</a>
+  
+    <li><a href="../RSS2Mail/RSS/Item.html">RSS2Mail::RSS::Item</a>
+  
+    <li><a href="../RSS2Mail/Util.html">RSS2Mail::Util</a>
+  
+    <li><a href="../RSS2Mail/Version.html">RSS2Mail::Version</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class RSS2Mail::Feed</h1>
+
+  <div id="description" class="description">
+    
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
+      <dl>
       
+        <dt id="HOST">HOST
+        
+        <dd class="description">
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <!-- Attributes -->
+    <section id="attribute-method-details" class="method-section section">
+      <h3 class="section-header">Attributes</h3>
 
       
+      <div id="attribute-i-content" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">content</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
 
-      
-      <!-- Constants -->
-      <div id="constants-list" class="section">
-        <h3 class="section-header">Constants</h3>
-        <dl>
+        <div class="method-description">
         
-          <dt><a name="HOST">HOST</a></dt>
-          
-          <dd class="description"></dd>
-          
         
-        </dl>
+        
+        </div>
       </div>
       
+      <div id="attribute-i-debug" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">debug</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
 
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
       
-      <!-- Attributes -->
-      <div id="attribute-method-details" class="method-section section">
-        <h3 class="section-header">Attributes</h3>
-
-        
-        <div id="content-attribute-method" class="method-detail">
-          <a name="content"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">content</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
+      <div id="attribute-i-feed" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">feed</span><span
+            class="attribute-access-type">[R]</span>
         </div>
-        
-        <div id="debug-attribute-method" class="method-detail">
-          <a name="debug"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">debug</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
 
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
+        <div class="method-description">
         
-        <div id="feed-attribute-method" class="method-detail">
-          <a name="feed"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">feed</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
         
-        <div id="reload-attribute-method" class="method-detail">
-          <a name="reload"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">reload</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
         
-        <div id="rss-attribute-method" class="method-detail">
-          <a name="rss"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">rss</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
         </div>
-        
-        <div id="simple-attribute-method" class="method-detail">
-          <a name="simple"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">simple</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-        <div id="updated-attribute-method" class="method-detail">
-          <a name="updated"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">updated</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-        <div id="verbose-attribute-method" class="method-detail">
-          <a name="verbose"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">verbose</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-      </div><!-- attribute-method-details -->
+      </div>
       
+      <div id="attribute-i-reload" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">reload</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
 
-      <!-- Methods -->
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
       
-      <div id="public-class-method-details" class="method-section section">
-        <h3 class="section-header">Public Class Methods</h3>
+      <div id="attribute-i-rss" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">rss</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
 
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
       
-        <div id="new-method" class="method-detail ">
-          <a name="method-c-new"></a>
+      <div id="attribute-i-simple" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">simple</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-updated" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">updated</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-verbose" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">verbose</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+    </section><!-- attribute-method-details -->
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(feed, options = {})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
 
           
-          <div class="method-heading">
-            <span class="method-name">new</span><span
-              class="method-args">(feed, options = {})</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="new-source">
-<pre>
-<span class="ruby-comment"># File lib/rss2mail/feed.rb, line 41</span>
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 41</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">feed</span>, <span class="ruby-identifier">options</span> = {})
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-node">&quot;Hash expected, got #{feed.class}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">feed</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)
 
@@ -337,42 +309,39 @@
 
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Feed incomplete: #{required.join(', ')} missing&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">required</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- new-source -->
-            
-          </div>
-
+          </div><!-- new-source -->
           
+        </div>
 
-          
-        </div><!-- new-method -->
+        
 
-      
-      </div><!-- public-class-method-details -->
+        
+      </div><!-- new-method -->
+
     
-      <div id="public-instance-method-details" class="method-section section">
-        <h3 class="section-header">Public Instance Methods</h3>
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
 
-      
-        <div id="deliver-method" class="method-detail ">
-          <a name="method-i-deliver"></a>
+    
+      <div id="method-i-deliver" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">deliver</span><span
+            class="method-args">(templates)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
 
           
-          <div class="method-heading">
-            <span class="method-name">deliver</span><span
-              class="method-args">(templates)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="deliver-source">
-<pre>
-<span class="ruby-comment"># File lib/rss2mail/feed.rb, line 58</span>
+          <div class="method-source-code" id="deliver-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 58</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">deliver</span>(<span class="ruby-identifier">templates</span>)
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">mail_cmd</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">which</span>(<span class="ruby-identifier">_mail_cmd</span> = <span class="ruby-string">'mail'</span>)
     <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Mail command not found: #{_mail_cmd}&quot;</span>
@@ -402,7 +371,7 @@
 
   <span class="ruby-identifier">content_type_header</span> = <span class="ruby-node">&quot;Content-type: #{content_type}; charset=#{encoding}&quot;</span>
 
-  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">template</span> = <span class="ruby-identifier">templates</span>[<span class="ruby-identifier">content_type</span>[<span class="ruby-regexp">/\/(.*)/</span>, <span class="ruby-value">1</span>]]
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">template</span> = <span class="ruby-identifier">templates</span>[<span class="ruby-identifier">content_type</span>[<span class="ruby-regexp">%r\/(.*)/</span>, <span class="ruby-value">1</span>]]
     <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;Template not found: #{content_type}&quot;</span>
     <span class="ruby-keyword">return</span>
   <span class="ruby-keyword">end</span>
@@ -443,42 +412,39 @@
   <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;#{sent} items sent&quot;</span>
   <span class="ruby-identifier">sent</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- deliver-source -->
-            
-          </div>
-
+          </div><!-- deliver-source -->
           
+        </div>
 
-          
-        </div><!-- deliver-method -->
+        
 
-      
-      </div><!-- public-instance-method-details -->
+        
+      </div><!-- deliver-method -->
+
     
-      <div id="private-instance-method-details" class="method-section section">
-        <h3 class="section-header">Private Instance Methods</h3>
+    </section><!-- public-instance-method-details -->
+  
+     <section id="private-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Private Instance Methods</h3>
 
-      
-        <div id="error-method" class="method-detail ">
-          <a name="method-i-error"></a>
+    
+      <div id="method-i-error" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">error</span><span
+            class="method-args">(err = nil, occasion = nil, extra = nil)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
 
           
-          <div class="method-heading">
-            <span class="method-name">error</span><span
-              class="method-args">(err = nil, occasion = nil, extra = nil)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="error-source">
-<pre>
-<span class="ruby-comment"># File lib/rss2mail/feed.rb, line 214</span>
+          <div class="method-source-code" id="error-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 214</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">error</span>(<span class="ruby-identifier">err</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">occasion</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">extra</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">msg</span> = <span class="ruby-string">'Error'</span>
 
@@ -490,36 +456,33 @@
 
   <span class="ruby-identifier">log</span> <span class="ruby-identifier">msg</span>, <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- error-source -->
-            
-          </div>
+          </div><!-- error-source -->
+          
+        </div>
 
+        
+
+        
+      </div><!-- error-method -->
+
+    
+      <div id="method-i-get" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get</span><span
+            class="method-args">(reload = reload)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
           
 
           
-        </div><!-- error-method -->
-
-      
-        <div id="get-method" class="method-detail ">
-          <a name="method-i-get"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">get</span><span
-              class="method-args">(reload = reload)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="get-source">
-<pre>
-<span class="ruby-comment"># File lib/rss2mail/feed.rb, line 131</span>
+          <div class="method-source-code" id="get-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 131</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">reload</span> = <span class="ruby-identifier">reload</span>)
   <span class="ruby-identifier">conditions</span> = {}
 
@@ -563,75 +526,69 @@
 
   <span class="ruby-ivar">@content</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- get-source -->
-            
-          </div>
+          </div><!-- get-source -->
+          
+        </div>
 
+        
+
+        
+      </div><!-- get-method -->
+
+    
+      <div id="method-i-log" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">log</span><span
+            class="method-args">(msg, verbose = verbose)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
           
 
           
-        </div><!-- get-method -->
-
-      
-        <div id="log-method" class="method-detail ">
-          <a name="method-i-log"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">log</span><span
-              class="method-args">(msg, verbose = verbose)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="log-source">
-<pre>
-<span class="ruby-comment"># File lib/rss2mail/feed.rb, line 210</span>
+          <div class="method-source-code" id="log-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 210</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">log</span>(<span class="ruby-identifier">msg</span>, <span class="ruby-identifier">verbose</span> = <span class="ruby-identifier">verbose</span>)
   <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;[#{feed[:title]}] #{msg}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">verbose</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- log-source -->
-            
-          </div>
+          </div><!-- log-source -->
+          
+        </div>
 
+        
+
+        
+      </div><!-- log-method -->
+
+    
+      <div id="method-i-parse" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse</span><span
+            class="method-args">(reload = reload)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
           
 
           
-        </div><!-- log-method -->
-
-      
-        <div id="parse-method" class="method-detail ">
-          <a name="method-i-parse"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">parse</span><span
-              class="method-args">(reload = reload)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="parse-source">
-<pre>
-<span class="ruby-comment"># File lib/rss2mail/feed.rb, line 175</span>
+          <div class="method-source-code" id="parse-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 175</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span>(<span class="ruby-identifier">reload</span> = <span class="ruby-identifier">reload</span>)
   <span class="ruby-ivar">@rss</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">reload</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">content</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@rss</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">begin</span>
     <span class="ruby-constant">RSS2Mail</span><span class="ruby-operator">::</span><span class="ruby-constant">RSS</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">content</span>, <span class="ruby-identifier">simple</span>)
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">SimpleRSSError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">err</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-operator">::</span><span class="ruby-constant">SimpleRSSError</span>, <span class="ruby-operator">::</span><span class="ruby-constant">RSS</span><span class="ruby-operator">::</span><span class="ruby-constant">NotWellFormedError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">err</span>
     <span class="ruby-identifier">error</span> <span class="ruby-identifier">err</span>, <span class="ruby-string">'while parsing feed'</span>
   <span class="ruby-keyword">end</span>
     <span class="ruby-identifier">sent</span> = <span class="ruby-identifier">feed</span>[<span class="ruby-value">:sent</span>]
@@ -651,36 +608,33 @@
 
   <span class="ruby-ivar">@rss</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- parse-source -->
-            
-          </div>
+          </div><!-- parse-source -->
+          
+        </div>
 
+        
+
+        
+      </div><!-- parse-method -->
+
+    
+      <div id="method-i-send_mail" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">send_mail</span><span
+            class="method-args">(cmd, body) { || ... }</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
           
 
           
-        </div><!-- parse-method -->
-
-      
-        <div id="send_mail-method" class="method-detail ">
-          <a name="method-i-send_mail"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">send_mail</span><span
-              class="method-args">(cmd, body)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="send_mail-source">
-<pre>
-<span class="ruby-comment"># File lib/rss2mail/feed.rb, line 201</span>
+          <div class="method-source-code" id="send_mail-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 201</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">send_mail</span>(<span class="ruby-identifier">cmd</span>, <span class="ruby-identifier">body</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">debug</span>
 
@@ -689,29 +643,26 @@
 <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">EPIPE</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">err</span>
   <span class="ruby-identifier">error</span> <span class="ruby-identifier">err</span>, <span class="ruby-string">'while sending mail'</span>, <span class="ruby-identifier">cmd</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- send_mail-source -->
-            
-          </div>
-
+          </div><!-- send_mail-source -->
           
+        </div>
 
-          
-        </div><!-- send_mail-method -->
+        
 
-      
-      </div><!-- private-instance-method-details -->
+        
+      </div><!-- send_mail-method -->
+
     
-    </div><!-- 5Buntitled-5D -->
+    </section><!-- private-instance-method-details -->
   
+  </section><!-- 5Buntitled-5D -->
 
-  </div><!-- documentation -->
+</div><!-- documentation -->
 
-  <div id="validator-badges">
-    <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
-    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
-      Rdoc Generator</a> 2</small>.</p>
-  </div>
 
-</body>
-</html>
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
 
