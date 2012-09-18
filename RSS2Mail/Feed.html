@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RSS2Mail::Feed - rss2mail Application documentation (v0.1.0)</title>
+<title>class RSS2Mail::Feed - rss2mail Application documentation (v0.1.1)</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -63,7 +63,19 @@
   
 </nav>
 
-    
+    <!-- Included Modules -->
+<nav id="includes-section" class="section">
+  <h3 class="section-header">Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="Util.html">RSS2Mail::Util</a>
+  
+  
+  </ul>
+</nav>
+
     <!-- Method Quickref -->
 <nav id="method-list-section" class="section">
   <h3 class="section-header">Methods</h3>
@@ -501,7 +513,7 @@
   <span class="ruby-identifier">log</span> <span class="ruby-identifier">conditions</span>.<span class="ruby-identifier">inspect</span>, <span class="ruby-identifier">debug</span>
 
   <span class="ruby-keyword">begin</span>
-    <span class="ruby-identifier">open</span>(<span class="ruby-identifier">feed</span>[<span class="ruby-value">:url</span>], <span class="ruby-identifier">conditions</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">uri</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">feed</span>[<span class="ruby-value">:url</span>], <span class="ruby-identifier">conditions</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">uri</span><span class="ruby-operator">|</span>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">etag</span> = <span class="ruby-identifier">uri</span>.<span class="ruby-identifier">meta</span>[<span class="ruby-string">'etag'</span>]
         <span class="ruby-identifier">feed</span>[<span class="ruby-value">:etag</span>] = <span class="ruby-identifier">etag</span>
       <span class="ruby-keyword">end</span>
