@@ -27,7 +27,6 @@
 #++
 
 require 'rss'
-require 'open-uri'
 require 'simple-rss'
 require 'unidecode'
 require 'nuggets/util/i18n'
@@ -42,7 +41,7 @@ module RSS2Mail
 
   class RSS
 
-    USER_AGENT = "RSS2Mail/#{VERSION}".freeze
+    include Util
 
     SUBSTITUTIONS = {
       '–'     => '--',
@@ -57,7 +56,7 @@ module RSS2Mail
     attr_reader :content, :rss
 
     def self.parse(url, *args)
-      new(open(url, 'User-Agent' => USER_AGENT), *args)
+      new(open_feed(url), *args)
     end
 
     def initialize(content, simple = false)
@@ -118,7 +117,7 @@ module RSS2Mail
       end
 
       def subject
-        @subject ||= title ? clean_subject(title) : 'NO TITLE'
+        @subject ||= title ? clean_subject(title.dup) : 'NO TITLE'
       end
 
       private
@@ -165,7 +164,7 @@ module RSS2Mail
       def get_body(tag, encoding)
         body = case tag
           when nil    then return
-          when true   then open(link).read
+          when true   then open_feed(link).read
           when String then extract_body(tag)
           when Array  then extract_body(*tag)
           else raise ArgumentError, "don't know how to handle tag of type #{tag.class}"
@@ -179,19 +178,18 @@ module RSS2Mail
 
       def extract_body(expr, attribute = nil)
         if defined?(Hpricot)
-          elem = Hpricot(open(link)).at(expr)
+          elem = Hpricot(open_feed(link)).at(expr)
           attribute ? elem[attribute] : elem.to_s
         else
-          open(link).read
+          open_feed(link).read
         end
       end
 
-      def clean_subject(string)
-        string.
-          replace_diacritics.
-          gsub(SUBSTITUTIONS_RE) { |m| SUBSTITUTIONS[m] }.
-          to_ascii.
-          gsub(/'/, "'\\\\''")
+      def clean_subject(str)
+        str.replace_diacritics!
+        str.gsub!(SUBSTITUTIONS_RE) { |m| SUBSTITUTIONS[m] }
+        str.gsub!(/'/, "'\\\\''")
+        str.to_ascii
       end
 
     end

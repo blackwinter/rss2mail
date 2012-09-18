@@ -3,7 +3,7 @@
 #                                                                             #
 # rss2mail -- Send RSS feeds as e-mail                                        #
 #                                                                             #
-# Copyright (C) 2007-2011 Jens Wille                                          #
+# Copyright (C) 2007-2012 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <ww@blackwinter.de>                                          #
@@ -24,8 +24,9 @@
 ###############################################################################
 #++
 
+require 'rss2mail/util'
 require 'rss2mail/feed'
-require 'rss2mail/version'
+require 'rss2mail/rss'
 
 module RSS2Mail
 end

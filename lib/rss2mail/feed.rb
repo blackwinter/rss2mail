@@ -28,11 +28,11 @@ require 'erb'
 require 'nuggets/file/which'
 require 'nuggets/string/evaluate'
 
-require 'rss2mail/rss'
-
 module RSS2Mail
 
   class Feed
+
+    include Util
 
     HOST = ENV['HOSTNAME'] || ENV['HOST'] || %x{hostname}.chomp
 
@@ -146,7 +146,7 @@ module RSS2Mail
       log conditions.inspect, debug
 
       begin
-        open(feed[:url], conditions) { |uri|
+        open_feed(feed[:url], conditions) { |uri|
           if etag = uri.meta['etag']
             feed[:etag] = etag
           end

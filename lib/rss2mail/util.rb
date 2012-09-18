@@ -3,7 +3,7 @@
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2011 Jens Wille                                          #
+# Copyright (C) 2007-2012 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <ww@blackwinter.de>                                          #
@@ -28,23 +28,27 @@ require 'uri'
 require 'open-uri'
 require 'hpricot'
 
+require 'rss2mail/version'
+
 module RSS2Mail
 
   module Util
 
     extend self
 
-    FEED_REGEXP = %r{\Aapplication/(?:atom|rss)\+xml\z}io
+    USER_AGENT = "RSS2Mail/#{VERSION}".freeze
+
+    FEED_RE = %r{\Aapplication/(?:atom|rss)\+xml\z}i
 
     # cf. <http://www.rssboard.org/rss-autodiscovery>
     def discover_feed(url, or_self = false)
       default = or_self ? url : nil
 
       unless url.nil? || url.empty? || url == 'about:blank'
-        doc = Hpricot(open(url))
+        doc = Hpricot(open_feed(url))
 
         if feed_element = doc.search('//link[@rel="alternate"').find { |link|
-          link[:type] =~ FEED_REGEXP
+          link[:type] =~ FEED_RE
         }
           if feed_href = feed_element[:href]
             return feed_href if feed_href =~ URI.regexp(%w[http https])
@@ -56,6 +60,10 @@ module RSS2Mail
       end
 
       default
+    end
+
+    def open_feed(url, options = {}, &block)
+      open(url, options.merge('User-Agent' => USER_AGENT), &block)
     end
 
   end
