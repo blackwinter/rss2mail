@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "rss2mail"
-  s.version = "0.1.2"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jens Wille"]
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README", "COPYING", "ChangeLog"]
   s.files = ["lib/rss2mail.rb", "lib/rss2mail/version.rb", "lib/rss2mail/feed.rb", "lib/rss2mail/util.rb", "lib/rss2mail/rss.rb", "bin/rss2mail", "templates/plain.erb", "templates/html.erb", "COPYING", "ChangeLog", "Rakefile", "README", "example/feeds.yaml"]
   s.homepage = "http://rss2mail.rubyforge.org/"
-  s.rdoc_options = ["--charset", "UTF-8", "--line-numbers", "--all", "--title", "rss2mail Application documentation (v0.1.2)", "--main", "README"]
+  s.rdoc_options = ["--charset", "UTF-8", "--line-numbers", "--all", "--title", "rss2mail Application documentation (v0.1.3)", "--main", "README"]
   s.require_paths = ["lib"]
   s.rubyforge_project = "rss2mail"
   s.rubygems_version = "1.8.24"
