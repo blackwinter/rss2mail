@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RSS2Mail::Feed - rss2mail Application documentation (v0.1.2)</title>
+<title>class RSS2Mail::Feed - rss2mail Application documentation (v0.1.3)</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -94,6 +94,8 @@
     
     <li><a href="#method-i-parse">#parse</a>
     
+    <li><a href="#method-i-render">#render</a>
+    
     <li><a href="#method-i-send_mail">#send_mail</a>
     
   </ul>
@@ -124,6 +126,8 @@
     <li><a href="../RSS2Mail.html">RSS2Mail</a>
   
     <li><a href="../RSS2Mail/Feed.html">RSS2Mail::Feed</a>
+  
+    <li><a href="../RSS2Mail/Feed/MAIL.html">RSS2Mail::Feed::MAIL</a>
   
     <li><a href="../RSS2Mail/RSS.html">RSS2Mail::RSS</a>
   
@@ -160,7 +164,22 @@
       <h3 class="section-header">Constants</h3>
       <dl>
       
+        <dt id="FROM">FROM
+        
+        <dd class="description">
+        
+      
         <dt id="HOST">HOST
+        
+        <dd class="description">
+        
+      
+        <dt id="KEEP">KEEP
+        
+        <dd class="description">
+        
+      
+        <dt id="MAIL">MAIL
         
         <dd class="description">
         
@@ -304,7 +323,7 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 41</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 48</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">feed</span>, <span class="ruby-identifier">options</span> = {})
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-node">&quot;Hash expected, got #{feed.class}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">feed</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)
 
@@ -317,9 +336,11 @@
   <span class="ruby-ivar">@debug</span>   = <span class="ruby-identifier">options</span>[<span class="ruby-value">:debug</span>]
 
   <span class="ruby-identifier">required</span> = [<span class="ruby-value">:url</span>, <span class="ruby-value">:to</span>, <span class="ruby-value">:title</span>]
-  <span class="ruby-identifier">required</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">feed</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">i</span>) }
+  <span class="ruby-identifier">required</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span> <span class="ruby-identifier">feed</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">key</span>) }
 
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Feed incomplete: #{required.join(', ')} missing&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">required</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">required</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Feed incomplete: #{required.join(', ')} missing&quot;</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- new-source -->
           
@@ -353,15 +374,11 @@
 
           
           <div class="method-source-code" id="deliver-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 58</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 71</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">deliver</span>(<span class="ruby-identifier">templates</span>)
-  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">mail_cmd</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">which</span>(<span class="ruby-identifier">_mail_cmd</span> = <span class="ruby-string">'mail'</span>)
-    <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Mail command not found: #{_mail_cmd}&quot;</span>
-  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Mail command not found: #{MAIL}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">MAIL</span>
 
-  <span class="ruby-identifier">to</span> = [*<span class="ruby-identifier">feed</span>[<span class="ruby-value">:to</span>]]
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">to</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">to</span> = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">feed</span>[<span class="ruby-value">:to</span>])).<span class="ruby-identifier">empty?</span>
     <span class="ruby-identifier">log</span> <span class="ruby-string">'No one to send to'</span>
     <span class="ruby-keyword">return</span>
   <span class="ruby-keyword">end</span>
@@ -371,58 +388,38 @@
     <span class="ruby-keyword">return</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rss</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">items</span> = <span class="ruby-identifier">rss</span>.<span class="ruby-identifier">items</span>).<span class="ruby-identifier">empty?</span>
     <span class="ruby-identifier">log</span> <span class="ruby-string">'No new items'</span>
     <span class="ruby-keyword">return</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">content_type</span> = <span class="ruby-identifier">feed</span>[<span class="ruby-value">:content_type</span>] <span class="ruby-operator">||</span> <span class="ruby-string">'text/html'</span>
-  <span class="ruby-identifier">encoding</span>     = <span class="ruby-identifier">feed</span>[<span class="ruby-value">:encoding</span>]     <span class="ruby-operator">||</span> <span class="ruby-string">'UTF-8'</span>
+  <span class="ruby-identifier">type</span>     = <span class="ruby-identifier">feed</span>[<span class="ruby-value">:content_type</span>] <span class="ruby-operator">||</span> <span class="ruby-string">'text/html'</span>
+  <span class="ruby-identifier">encoding</span> = <span class="ruby-identifier">feed</span>[<span class="ruby-value">:encoding</span>]     <span class="ruby-operator">||</span> <span class="ruby-string">'UTF-8'</span>
 
-  <span class="ruby-identifier">feed</span>[<span class="ruby-value">:sent</span>] <span class="ruby-operator">||=</span> []
+  <span class="ruby-identifier">type_header</span> = <span class="ruby-node">&quot;Content-type: #{type}; charset=#{encoding}&quot;</span>
 
-  <span class="ruby-identifier">content_type_header</span> = <span class="ruby-node">&quot;Content-type: #{content_type}; charset=#{encoding}&quot;</span>
-
-  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">template</span> = <span class="ruby-identifier">templates</span>[<span class="ruby-identifier">content_type</span>[<span class="ruby-regexp">%r\/(.*)/</span>, <span class="ruby-value">1</span>]]
-    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;Template not found: #{content_type}&quot;</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">template</span> = <span class="ruby-identifier">templates</span>[<span class="ruby-identifier">type</span>[<span class="ruby-regexp">%r\/(.*)/</span>, <span class="ruby-value">1</span>]]
+    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;Template not found: #{type}&quot;</span>
     <span class="ruby-keyword">return</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">cmd</span> = [
-    <span class="ruby-identifier">mail_cmd</span>,
-    <span class="ruby-string">'-e'</span>,
-    <span class="ruby-node">&quot;-a '#{content_type_header}'&quot;</span>,
-    <span class="ruby-node">&quot;-a 'From: rss2mail@#{HOST}'&quot;</span>,
-    <span class="ruby-node">&quot;-s '[#{feed[:title]}] \#{subject}'&quot;</span>,
-    *<span class="ruby-identifier">to</span>
-  ].<span class="ruby-identifier">join</span>(<span class="ruby-string">' '</span>)
+  <span class="ruby-identifier">sent</span> = <span class="ruby-identifier">feed</span>[<span class="ruby-value">:sent</span>] <span class="ruby-operator">||=</span> []
+  <span class="ruby-identifier">count</span>, <span class="ruby-identifier">title</span> = <span class="ruby-value">0</span>, <span class="ruby-identifier">feed</span>[<span class="ruby-value">:title</span>]
 
-  <span class="ruby-identifier">sent</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">items</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">link</span>, <span class="ruby-identifier">subject</span>, <span class="ruby-identifier">body</span> = <span class="ruby-identifier">render</span>(<span class="ruby-identifier">feed</span>, <span class="ruby-identifier">item</span>, <span class="ruby-identifier">template</span>)
 
-  <span class="ruby-identifier">rss</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">title</span>       = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">title</span>
-    <span class="ruby-identifier">link</span>        = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">link</span>
-    <span class="ruby-identifier">description</span> = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">description</span>(<span class="ruby-identifier">feed</span>[<span class="ruby-value">:unescape_html</span>])
-    <span class="ruby-identifier">date</span>        = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">date</span>
-    <span class="ruby-identifier">author</span>      = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">author</span>
-    <span class="ruby-identifier">body</span>        = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">body</span>(<span class="ruby-identifier">feed</span>[<span class="ruby-value">:body</span>])
-    <span class="ruby-identifier">subject</span>     = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">subject</span>
-
-    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;#{title} / #{date} [#{author}]&quot;</span>, <span class="ruby-identifier">debug</span>
-    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;&lt;#{link}&gt;&quot;</span>, <span class="ruby-identifier">debug</span>
-
-    <span class="ruby-identifier">send_mail</span>(<span class="ruby-identifier">cmd</span>.<span class="ruby-identifier">evaluate</span>(<span class="ruby-identifier">binding</span>), <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">template</span>).<span class="ruby-identifier">result</span>(<span class="ruby-identifier">binding</span>)) {
-      <span class="ruby-identifier">feed</span>[<span class="ruby-value">:sent</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">link</span>
-      <span class="ruby-identifier">sent</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">send_mail</span>(<span class="ruby-identifier">type_header</span>, <span class="ruby-identifier">to</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">subject</span>, <span class="ruby-identifier">body</span>) {
+      <span class="ruby-identifier">sent</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">link</span>
+      <span class="ruby-identifier">count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
     }
   }
 
-  <span class="ruby-comment"># only keep the last 100 entries</span>
-  <span class="ruby-identifier">feed</span>[<span class="ruby-value">:sent</span>].<span class="ruby-identifier">uniq!</span>
-  <span class="ruby-identifier">feed</span>[<span class="ruby-value">:sent</span>].<span class="ruby-identifier">slice!</span>(<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-value">-100</span>)
+  <span class="ruby-identifier">sent</span>.<span class="ruby-identifier">uniq!</span>
+  <span class="ruby-identifier">sent</span>.<span class="ruby-identifier">slice!</span>(<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-operator">-</span><span class="ruby-constant">KEEP</span>)
 
-  <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;#{sent} items sent&quot;</span>
-  <span class="ruby-identifier">sent</span>
+  <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;#{count} items sent&quot;</span>
+  <span class="ruby-identifier">count</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- deliver-source -->
           
@@ -456,7 +453,7 @@
 
           
           <div class="method-source-code" id="error-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 214</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 223</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">error</span>(<span class="ruby-identifier">err</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">occasion</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">extra</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">msg</span> = <span class="ruby-string">'Error'</span>
 
@@ -494,7 +491,7 @@
 
           
           <div class="method-source-code" id="get-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 131</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 120</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">reload</span> = <span class="ruby-identifier">reload</span>)
   <span class="ruby-identifier">conditions</span> = {}
 
@@ -536,7 +533,7 @@
     <span class="ruby-identifier">error</span> <span class="ruby-identifier">err</span>, <span class="ruby-string">'while getting feed'</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-ivar">@content</span>
+  <span class="ruby-identifier">content</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- get-source -->
           
@@ -564,7 +561,7 @@
 
           
           <div class="method-source-code" id="log-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 210</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 219</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">log</span>(<span class="ruby-identifier">msg</span>, <span class="ruby-identifier">verbose</span> = <span class="ruby-identifier">verbose</span>)
   <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;[#{feed[:title]}] #{msg}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">verbose</span>
 <span class="ruby-keyword">end</span></pre>
@@ -594,23 +591,23 @@
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 175</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 164</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span>(<span class="ruby-identifier">reload</span> = <span class="ruby-identifier">reload</span>)
   <span class="ruby-ivar">@rss</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">reload</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">content</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@rss</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">begin</span>
-    <span class="ruby-constant">RSS2Mail</span><span class="ruby-operator">::</span><span class="ruby-constant">RSS</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">content</span>, <span class="ruby-identifier">simple</span>)
-  <span class="ruby-keyword">rescue</span> <span class="ruby-operator">::</span><span class="ruby-constant">SimpleRSSError</span>, <span class="ruby-operator">::</span><span class="ruby-constant">RSS</span><span class="ruby-operator">::</span><span class="ruby-constant">NotWellFormedError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">err</span>
-    <span class="ruby-identifier">error</span> <span class="ruby-identifier">err</span>, <span class="ruby-string">'while parsing feed'</span>
-  <span class="ruby-keyword">end</span>
-    <span class="ruby-identifier">sent</span> = <span class="ruby-identifier">feed</span>[<span class="ruby-value">:sent</span>]
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">content</span>
+    <span class="ruby-ivar">@rss</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">RSS</span>.<span class="ruby-identifier">feed</span>(<span class="ruby-identifier">content</span>, <span class="ruby-identifier">simple</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">err</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">error</span> <span class="ruby-identifier">err</span>, <span class="ruby-string">'while parsing feed'</span>
+    }
 
-    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">reload</span>
-      <span class="ruby-ivar">@rss</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">rss</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">reload</span>
+      <span class="ruby-identifier">sent</span> = <span class="ruby-identifier">feed</span>[<span class="ruby-value">:sent</span>]
+
+      <span class="ruby-identifier">rss</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
         <span class="ruby-keyword">if</span> <span class="ruby-identifier">updated</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">date</span> = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">date</span>
           <span class="ruby-identifier">date</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">updated</span>
-        <span class="ruby-keyword">else</span>
-          <span class="ruby-identifier">sent</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">sent</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">item</span>.<span class="ruby-identifier">link</span>)
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">sent</span>
+          <span class="ruby-identifier">sent</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">item</span>.<span class="ruby-identifier">link</span>)
         <span class="ruby-keyword">end</span>
       }
     <span class="ruby-keyword">end</span>
@@ -618,7 +615,7 @@
     <span class="ruby-identifier">log</span> <span class="ruby-string">'Nothing to parse'</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-ivar">@rss</span>
+  <span class="ruby-identifier">rss</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- parse-source -->
           
@@ -630,11 +627,52 @@
       </div><!-- parse-method -->
 
     
+      <div id="method-i-render" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">render</span><span
+            class="method-args">(feed, item, template)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="render-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 190</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">feed</span>, <span class="ruby-identifier">item</span>, <span class="ruby-identifier">template</span>)
+  <span class="ruby-identifier">title</span>       = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">title</span>
+  <span class="ruby-identifier">link</span>        = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">link</span>
+  <span class="ruby-identifier">description</span> = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">description</span>(<span class="ruby-identifier">feed</span>[<span class="ruby-value">:unescape_html</span>])
+  <span class="ruby-identifier">date</span>        = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">date</span>
+  <span class="ruby-identifier">author</span>      = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">author</span>
+  <span class="ruby-identifier">body</span>        = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">body</span>(<span class="ruby-identifier">feed</span>[<span class="ruby-value">:body</span>])
+  <span class="ruby-identifier">subject</span>     = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">subject</span>
+
+  <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;#{title} / #{date} [#{author}]&quot;</span>, <span class="ruby-identifier">debug</span>
+  <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;&lt;#{link}&gt;&quot;</span>, <span class="ruby-identifier">debug</span>
+
+  [<span class="ruby-identifier">link</span>, <span class="ruby-identifier">subject</span>, <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">template</span>).<span class="ruby-identifier">result</span>(<span class="ruby-identifier">binding</span>)]
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- render-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- render-method -->
+
+    
       <div id="method-i-send_mail" class="method-detail ">
         
         <div class="method-heading">
           <span class="method-name">send_mail</span><span
-            class="method-args">(cmd, body) { || ... }</span>
+            class="method-args">(type_header, to, title, subject, body) { || ... }</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
         
@@ -646,13 +684,18 @@
 
           
           <div class="method-source-code" id="send_mail-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 201</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">send_mail</span>(<span class="ruby-identifier">cmd</span>, <span class="ruby-identifier">body</span>)
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 205</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">send_mail</span>(<span class="ruby-identifier">type_header</span>, <span class="ruby-identifier">to</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">subject</span>, <span class="ruby-identifier">body</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">debug</span>
 
-  <span class="ruby-constant">IO</span>.<span class="ruby-identifier">popen</span>(<span class="ruby-identifier">cmd</span>, <span class="ruby-string">'w'</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">mail</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mail</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">body</span> }
+  <span class="ruby-constant">Open3</span>.<span class="ruby-identifier">popen3</span>(<span class="ruby-constant">MAIL</span>, <span class="ruby-string">'-e'</span>, <span class="ruby-string">'-a'</span>, <span class="ruby-identifier">type_header</span>, <span class="ruby-string">'-a'</span>, <span class="ruby-constant">FROM</span>,
+    <span class="ruby-string">'-s'</span>, <span class="ruby-node">&quot;[#{title}] #{subject}&quot;</span>, *<span class="ruby-identifier">to</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">mail</span>, <span class="ruby-identifier">_</span>, <span class="ruby-identifier">_</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">mail</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">body</span>
+    <span class="ruby-identifier">mail</span>.<span class="ruby-identifier">close</span>
+  }
+
   <span class="ruby-keyword">yield</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
-<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">EPIPE</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">err</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">EPIPE</span>, <span class="ruby-constant">IOError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">err</span>
   <span class="ruby-identifier">error</span> <span class="ruby-identifier">err</span>, <span class="ruby-string">'while sending mail'</span>, <span class="ruby-identifier">cmd</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- send_mail-source -->
