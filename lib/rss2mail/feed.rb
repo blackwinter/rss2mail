@@ -25,6 +25,7 @@
 #++
 
 require 'erb'
+require 'open3'
 require 'nuggets/file/which'
 require 'nuggets/string/evaluate'
 
@@ -34,9 +35,15 @@ module RSS2Mail
 
     include Util
 
-    HOST = ENV['HOSTNAME'] || ENV['HOST'] || %x{hostname}.chomp
+    unless MAIL = File.which(mail = 'mail'.freeze)
+      class << MAIL; self; end.send(:define_method, :to_s) { mail }
+    end
 
-    attr_reader :feed, :reload, :verbose, :debug, :simple, :updated, :content, :rss
+    HOST = ENV['HOSTNAME'] || ENV['HOST'] || %x{hostname}.chomp.freeze
+
+    FROM = "From: rss2mail@#{HOST}".freeze
+
+    KEEP = 100
 
     def initialize(feed, options = {})
       raise TypeError, "Hash expected, got #{feed.class}" unless feed.is_a?(Hash)
@@ -50,19 +57,21 @@ module RSS2Mail
       @debug   = options[:debug]
 
       required = [:url, :to, :title]
-      required.delete_if { |i| feed.has_key?(i) }
+      required.delete_if { |key| feed.has_key?(key) }
 
-      raise ArgumentError, "Feed incomplete: #{required.join(', ')} missing" unless required.empty?
+      unless required.empty?
+        raise ArgumentError, "Feed incomplete: #{required.join(', ')} missing"
+      end
     end
 
+    attr_reader :feed, :simple, :updated,
+                :reload, :verbose, :debug,
+                :content, :rss
+
     def deliver(templates)
-      unless mail_cmd = File.which(_mail_cmd = 'mail')
-        raise "Mail command not found: #{_mail_cmd}"
-      end
+      raise "Mail command not found: #{MAIL}" unless MAIL
 
-      to = [*feed[:to]]
-
-      if to.empty?
+      if (to = Array(feed[:to])).empty?
         log 'No one to send to'
         return
       end
@@ -72,58 +81,38 @@ module RSS2Mail
         return
       end
 
-      if rss.items.empty?
+      if (items = rss.items).empty?
         log 'No new items'
         return
       end
 
-      content_type = feed[:content_type] || 'text/html'
-      encoding     = feed[:encoding]     || 'UTF-8'
+      type     = feed[:content_type] || 'text/html'
+      encoding = feed[:encoding]     || 'UTF-8'
 
-      feed[:sent] ||= []
+      type_header = "Content-type: #{type}; charset=#{encoding}"
 
-      content_type_header = "Content-type: #{content_type}; charset=#{encoding}"
-
-      unless template = templates[content_type[/\/(.*)/, 1]]
-        log "Template not found: #{content_type}"
+      unless template = templates[type[/\/(.*)/, 1]]
+        log "Template not found: #{type}"
         return
       end
 
-      cmd = [
-        mail_cmd,
-        '-e',
-        "-a '#{content_type_header}'",
-        "-a 'From: rss2mail@#{HOST}'",
-        "-s '[#{feed[:title]}] \#{subject}'",
-        *to
-      ].join(' ')
+      sent = feed[:sent] ||= []
+      count, title = 0, feed[:title]
 
-      sent = 0
+      items.each { |item|
+        link, subject, body = render(feed, item, template)
 
-      rss.items.each { |item|
-        title       = item.title
-        link        = item.link
-        description = item.description(feed[:unescape_html])
-        date        = item.date
-        author      = item.author
-        body        = item.body(feed[:body])
-        subject     = item.subject
-
-        log "#{title} / #{date} [#{author}]", debug
-        log "<#{link}>", debug
-
-        send_mail(cmd.evaluate(binding), ERB.new(template).result(binding)) {
-          feed[:sent] << link
-          sent += 1
+        send_mail(type_header, to, title, subject, body) {
+          sent << link
+          count += 1
         }
       }
 
-      # only keep the last 100 entries
-      feed[:sent].uniq!
-      feed[:sent].slice!(0...-100)
+      sent.uniq!
+      sent.slice!(0...-KEEP)
 
-      log "#{sent} items sent"
-      sent
+      log "#{count} items sent"
+      count
     end
 
     private
@@ -169,25 +158,25 @@ module RSS2Mail
         error err, 'while getting feed'
       end
 
-      @content
+      content
     end
 
     def parse(reload = reload)
       @rss = nil if reload
 
-      if content && @rss ||= begin
-        RSS2Mail::RSS.new(content, simple)
-      rescue ::SimpleRSSError, ::RSS::NotWellFormedError => err
-        error err, 'while parsing feed'
-      end
-        sent = feed[:sent]
+      if content
+        @rss ||= RSS.feed(content, simple) { |err|
+          error err, 'while parsing feed'
+        }
 
-        unless reload
-          @rss.items.delete_if { |item|
+        if rss && !reload
+          sent = feed[:sent]
+
+          rss.items.delete_if { |item|
             if updated && date = item.date
               date <= updated
-            else
-              sent && sent.include?(item.link)
+            elsif sent
+              sent.include?(item.link)
             end
           }
         end
@@ -195,15 +184,35 @@ module RSS2Mail
         log 'Nothing to parse'
       end
 
-      @rss
+      rss
     end
 
-    def send_mail(cmd, body)
+    def render(feed, item, template)
+      title       = item.title
+      link        = item.link
+      description = item.description(feed[:unescape_html])
+      date        = item.date
+      author      = item.author
+      body        = item.body(feed[:body])
+      subject     = item.subject
+
+      log "#{title} / #{date} [#{author}]", debug
+      log "<#{link}>", debug
+
+      [link, subject, ERB.new(template).result(binding)]
+    end
+
+    def send_mail(type_header, to, title, subject, body)
       return if debug
 
-      IO.popen(cmd, 'w') { |mail| mail.puts body }
+      Open3.popen3(MAIL, '-e', '-a', type_header, '-a', FROM,
+        '-s', "[#{title}] #{subject}", *to) { |mail, _, _|
+        mail.puts body
+        mail.close
+      }
+
       yield if block_given?
-    rescue Errno::EPIPE => err
+    rescue Errno::EPIPE, IOError => err
       error err, 'while sending mail', cmd
     end
 

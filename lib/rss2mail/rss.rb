@@ -43,20 +43,28 @@ module RSS2Mail
 
     include Util
 
-    SUBSTITUTIONS = {
+    SUB = {
       '–'     => '--',
       '«'     => '<<',
       '&amp;' => '&'
     }
 
-    SUBSTITUTIONS_RE = Regexp.union(*SUBSTITUTIONS.keys)
+    SUB_RE = Regexp.union(*SUB.keys)
 
-    TAGS_TO_KEEP = %w[a p br h1 h2 h3 h4]
+    KEEP = %w[a p br h1 h2 h3 h4]
 
-    attr_reader :content, :rss
+    class << self
 
-    def self.parse(url, *args)
-      new(open_feed(url), *args)
+      def parse(url, *args)
+        new(open_feed(url), *args)
+      end
+
+      def feed(*args)
+        new(*args)
+      rescue ::SimpleRSSError, ::RSS::NotWellFormedError => err
+        yield err if block_given?
+      end
+
     end
 
     def initialize(content, simple = false)
@@ -65,6 +73,8 @@ module RSS2Mail
 
       @rss = simple ? simple_parse : parse
     end
+
+    attr_reader :content, :rss
 
     def simple?
       @simple
@@ -172,7 +182,7 @@ module RSS2Mail
           else raise ArgumentError, "don't know how to handle tag of type #{tag.class}"
         end
 
-        body.gsub!(/<\/?(.*?)>/) { |m| m if TAGS_TO_KEEP.include?($1.split.first.downcase) }
+        body.gsub!(/<\/?(.*?)>/) { |m| m if KEEP.include?($1.split.first.downcase) }
         body.gsub!(/<a\s+href=['"](?!http:).*?>(.*?)<\/a>/mi, '\1')
 
         encoding ? Iconv.conv('UTF-8', encoding, body) : body
@@ -189,8 +199,7 @@ module RSS2Mail
 
       def clean_subject(str)
         str.replace_diacritics!
-        str.gsub!(SUBSTITUTIONS_RE) { |m| SUBSTITUTIONS[m] }
-        str.gsub!(/'/, "'\\\\''")
+        str.gsub!(SUB_RE) { |m| SUB[m] }
         str.to_ascii
       end
 
