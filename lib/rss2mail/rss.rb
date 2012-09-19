@@ -84,6 +84,8 @@ module RSS2Mail
 
     class Item
 
+      include Util
+
       def initialize(item)
         @item = item
       end
