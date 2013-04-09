@@ -5,10 +5,10 @@
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2012 Jens Wille                                          #
+# Copyright (C) 2007-2013 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
-#     Jens Wille <ww@blackwinter.de>                                          #
+#     Jens Wille <jens.wille@gmail.com>                                       #
 #                                                                             #
 # rss2mail is free software; you can redistribute it and/or modify it under   #
 # the terms of the GNU Affero General Public License as published by the Free #

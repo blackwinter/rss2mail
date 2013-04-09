@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = ["Jens Wille"]
   s.date = "2012-09-19"
   s.description = "Send RSS feeds as e-mail"
-  s.email = "ww@blackwinter.de"
+  s.email = "jens.wille@gmail.com"
   s.executables = ["rss2mail"]
   s.extra_rdoc_files = ["README", "COPYING", "ChangeLog"]
   s.files = ["lib/rss2mail.rb", "lib/rss2mail/version.rb", "lib/rss2mail/feed.rb", "lib/rss2mail/util.rb", "lib/rss2mail/rss.rb", "bin/rss2mail", "templates/plain.erb", "templates/html.erb", "COPYING", "ChangeLog", "Rakefile", "README", "example/feeds.yaml"]
