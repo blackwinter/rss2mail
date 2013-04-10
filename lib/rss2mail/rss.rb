@@ -29,7 +29,7 @@
 require 'rss'
 require 'simple-rss'
 require 'unidecode'
-require 'nuggets/util/i18n'
+require 'nuggets/i18n'
 
 begin
   require 'hpricot'
