@@ -1,9 +1,9 @@
-Tue, 09 Apr 2013 12:56:10 +0200
-README	Tue, 09 Apr 2013 12:54:25 +0200
+Wed, 10 Apr 2013 12:50:38 +0200
+README	Wed, 10 Apr 2013 12:49:45 +0200
 COPYING	Tue, 09 Apr 2013 11:30:45 +0200
 ChangeLog	Tue, 09 Apr 2013 11:30:45 +0200
 lib/rss2mail.rb	Tue, 09 Apr 2013 12:55:24 +0200
-lib/rss2mail/rss.rb	Tue, 09 Apr 2013 12:55:34 +0200
+lib/rss2mail/rss.rb	Wed, 10 Apr 2013 12:47:50 +0200
 lib/rss2mail/feed.rb	Tue, 09 Apr 2013 12:55:30 +0200
 lib/rss2mail/util.rb	Tue, 09 Apr 2013 12:55:37 +0200
-lib/rss2mail/version.rb	Tue, 09 Apr 2013 11:30:45 +0200
+lib/rss2mail/version.rb	Wed, 10 Apr 2013 12:49:53 +0200
