@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module RSS2Mail::Util - rss2mail Application documentation (v0.1.4)</title>
+<title>module RSS2Mail::Util - rss2mail Application documentation (v0.2.0)</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -96,6 +96,10 @@
 
   <ul class="link-list">
   
+    <li><a href="../ERB.html">ERB</a>
+  
+    <li><a href="../Object.html">Object</a>
+  
     <li><a href="../RSS2Mail.html">RSS2Mail</a>
   
     <li><a href="../RSS2Mail/Feed.html">RSS2Mail::Feed</a>
@@ -109,6 +113,10 @@
     <li><a href="../RSS2Mail/Util.html">RSS2Mail::Util</a>
   
     <li><a href="../RSS2Mail/Version.html">RSS2Mail::Version</a>
+  
+    <li><a href="../Rack.html">Rack</a>
+  
+    <li><a href="../Rack/Auth.html">Rack::Auth</a>
   
   </ul>
 </nav>
@@ -138,6 +146,11 @@
       <dl>
       
         <dt id="FEED_RE">FEED_RE
+        
+        <dd class="description">
+        
+      
+        <dt id="URI_RE">URI_RE
         
         <dd class="description">
         
@@ -179,26 +192,20 @@ href="http://www.rssboard.org/rss-autodiscovery">www.rssboard.org/rss-autodiscov
 
           
           <div class="method-source-code" id="discover_feed-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 44</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 45</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">discover_feed</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">or_self</span> = <span class="ruby-keyword">false</span>)
-  <span class="ruby-identifier">default</span> = <span class="ruby-identifier">or_self</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">url</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
-
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">url</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;about:blank&#39;</span>
-    <span class="ruby-identifier">doc</span> = <span class="ruby-constant">Hpricot</span>(<span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">url</span>))
+    <span class="ruby-identifier">doc</span> = <span class="ruby-constant">Nokogiri</span>.<span class="ruby-constant">HTML</span>(<span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">url</span>))
 
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">feed_element</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">search</span>(<span class="ruby-string">&#39;//link[@rel=&quot;alternate&quot;&#39;</span>).<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">link</span><span class="ruby-operator">|</span>
-      <span class="ruby-identifier">link</span>[<span class="ruby-value">:type</span>] <span class="ruby-operator">=~</span> <span class="ruby-constant">FEED_RE</span>
-    }
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">feed_href</span> = <span class="ruby-identifier">feed_element</span>[<span class="ruby-value">:href</span>]
-        <span class="ruby-keyword">return</span> <span class="ruby-identifier">feed_href</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">feed_href</span> <span class="ruby-operator">=~</span> <span class="ruby-constant">URI</span>.<span class="ruby-identifier">regexp</span>(<span class="ruby-node">%w[http https]</span>)
-
-        <span class="ruby-identifier">base_href</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">at</span>(<span class="ruby-string">&#39;base&#39;</span>)[<span class="ruby-value">:href</span>] <span class="ruby-keyword">rescue</span> <span class="ruby-identifier">url</span>
-        <span class="ruby-keyword">return</span> <span class="ruby-constant">URI</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">base_href</span>, <span class="ruby-identifier">feed_href</span>).<span class="ruby-identifier">to_s</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">link</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">xpath</span>(<span class="ruby-string">&#39;//link[@rel=&quot;alternate&quot;]&#39;</span>).<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">i</span>[<span class="ruby-value">:type</span>] <span class="ruby-operator">=~</span> <span class="ruby-constant">FEED_RE</span> }
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">href</span> = <span class="ruby-identifier">link</span>[<span class="ruby-value">:href</span>]
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">href</span> <span class="ruby-operator">=~</span> <span class="ruby-constant">URI_RE</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">href</span> <span class="ruby-operator">:</span>
+          <span class="ruby-constant">URI</span>.<span class="ruby-identifier">join</span>((<span class="ruby-identifier">base</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">at_xpath</span>(<span class="ruby-string">&#39;//base&#39;</span>)) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">base</span>[<span class="ruby-value">:href</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">href</span>).<span class="ruby-identifier">to_s</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">default</span>
+  <span class="ruby-identifier">url</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">or_self</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- discover_feed-source -->
           
@@ -229,7 +236,7 @@ href="http://www.rssboard.org/rss-autodiscovery">www.rssboard.org/rss-autodiscov
 
           
           <div class="method-source-code" id="open_feed-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 65</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 60</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">options</span> = {}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">open</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&#39;User-Agent&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">USER_AGENT</span>), <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>

@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module RSS2Mail - rss2mail Application documentation (v0.2.0)</title>
+<title>class Object - rss2mail Application documentation (v0.2.0)</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -20,7 +20,7 @@
 <script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
 
 
-<body id="top" class="module">
+<body id="top" class="class">
 <nav id="metadata">
   <nav id="home-section" class="section">
   <h3 class="section-header">
@@ -49,12 +49,7 @@
     <nav id="file-list-section" class="section">
   <h3 class="section-header">Defined In</h3>
   <ul>
-    <li>lib/rss2mail.rb
     <li>lib/rss2mail/app.rb
-    <li>lib/rss2mail/feed.rb
-    <li>lib/rss2mail/rss.rb
-    <li>lib/rss2mail/util.rb
-    <li>lib/rss2mail/version.rb
   </ul>
 </nav>
 
@@ -63,10 +58,26 @@
 
   <div id="class-metadata">
     
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">BasicObject
+  
+</nav>
+
     
     
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
     
+    <li ><a href="#method-i-prepare">#prepare</a>
     
+  </ul>
+</nav>
+
   </div>
 
   <div id="project-metadata">
@@ -118,7 +129,7 @@
 </nav>
 
 <div id="documentation">
-  <h1 class="module">module RSS2Mail</h1>
+  <h1 class="class">class Object</h1>
 
   <div id="description" class="description">
     
@@ -133,24 +144,54 @@
     
 
     
-    <!-- Constants -->
-    <section id="constants-list" class="section">
-      <h3 class="section-header">Constants</h3>
-      <dl>
-      
-        <dt id="VERSION">VERSION
-        
-        <dd class="description">
-        
-      
-      </dl>
-    </section>
-    
 
     
 
     <!-- Methods -->
     
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-prepare" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">prepare</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="prepare-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/app.rb, line 72</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">prepare</span>
+  <span class="ruby-identifier">user</span> = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">env</span>[<span class="ruby-string">&#39;REMOTE_USER&#39;</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">error</span>(<span class="ruby-value">400</span>)
+
+  <span class="ruby-ivar">@feeds_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">settings</span>.<span class="ruby-identifier">root</span>, <span class="ruby-string">&#39;feeds.d&#39;</span>, <span class="ruby-node">&quot;#{user}.yaml&quot;</span>)
+  <span class="ruby-ivar">@feeds</span>      = <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-ivar">@feeds_file</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">YAML</span>.<span class="ruby-identifier">load_file</span>(<span class="ruby-ivar">@feeds_file</span>) <span class="ruby-operator">:</span> {}
+  <span class="ruby-ivar">@targets</span>    = <span class="ruby-ivar">@feeds</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">to_s</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- prepare-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- prepare-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
   </section><!-- 5Buntitled-5D -->
 
 </div><!-- documentation -->
