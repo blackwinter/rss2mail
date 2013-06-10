@@ -12,7 +12,7 @@ begin
       :email        => %q{jens.wille@gmail.com},
       :homepage     => :blackwinter,
       :extra_files  => FileList['templates/*'].to_a,
-      :dependencies => %w[simple-rss hpricot unidecode ruby-nuggets]
+      :dependencies => %w[nokogiri unidecode ruby-nuggets simple-rss sinatra]
     }
   }}
 rescue LoadError => err
