@@ -24,9 +24,8 @@
 ###############################################################################
 #++
 
-require 'uri'
 require 'open-uri'
-require 'hpricot'
+require 'nokogiri'
 
 require 'rss2mail/version'
 
@@ -40,26 +39,22 @@ module RSS2Mail
 
     FEED_RE = %r{\Aapplication/(?:atom|rss)\+xml\z}i
 
+    URI_RE = URI.regexp(%w[http https])
+
     # cf. <http://www.rssboard.org/rss-autodiscovery>
     def discover_feed(url, or_self = false)
-      default = or_self ? url : nil
-
       unless url.nil? || url.empty? || url == 'about:blank'
-        doc = Hpricot(open_feed(url))
+        doc = Nokogiri.HTML(open_feed(url))
 
-        if feed_element = doc.search('//link[@rel="alternate"').find { |link|
-          link[:type] =~ FEED_RE
-        }
-          if feed_href = feed_element[:href]
-            return feed_href if feed_href =~ URI.regexp(%w[http https])
-
-            base_href = doc.at('base')[:href] rescue url
-            return URI.join(base_href, feed_href).to_s
+        if link = doc.xpath('//link[@rel="alternate"]').find { |i| i[:type] =~ FEED_RE }
+          if href = link[:href]
+            return href =~ URI_RE ? href :
+              URI.join((base = doc.at_xpath('//base')) && base[:href] || url, href).to_s
           end
         end
       end
 
-      default
+      url if or_self
     end
 
     def open_feed(url, options = {}, &block)
