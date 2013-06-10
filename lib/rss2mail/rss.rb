@@ -180,7 +180,8 @@ module RSS2Mail
         body.gsub!(/<\/?(.*?)>/) { |m| m if KEEP.include?($1.split.first.downcase) }
         body.gsub!(/<a\s+href=['"](?!http:).*?>(.*?)<\/a>/mi, '\1')
 
-        encoding ? Iconv.conv('UTF-8', encoding, body) : body
+        body.encode!(encoding) if encoding
+        body
       end
 
       def extract_body(expr, attribute = nil)
