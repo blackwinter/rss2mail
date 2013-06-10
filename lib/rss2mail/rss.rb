@@ -27,15 +27,10 @@
 #++
 
 require 'rss'
-require 'simple-rss'
+require 'nokogiri'
 require 'unidecode'
+require 'simple-rss'
 require 'nuggets/i18n'
-
-begin
-  require 'hpricot'
-rescue LoadError => err
-  warn err
-end
 
 module RSS2Mail
 
@@ -189,12 +184,8 @@ module RSS2Mail
       end
 
       def extract_body(expr, attribute = nil)
-        if defined?(Hpricot)
-          elem = Hpricot(open_feed(link)).at(expr)
-          attribute ? elem[attribute] : elem.to_s
-        else
-          open_feed(link).read
-        end
+        elem = Nokogiri.HTML(open_feed(link)).at(expr)
+        attribute ? elem[attribute] : elem.to_s
       end
 
       def clean_subject(str)
