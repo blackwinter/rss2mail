@@ -28,7 +28,7 @@
 
 require 'rss'
 require 'nokogiri'
-require 'unidecode'
+require 'unidecoder'
 require 'simple-rss'
 require 'nuggets/i18n'
 
