@@ -10,6 +10,7 @@ begin
       :summary      => %q{Send RSS feeds as e-mail},
       :author       => %q{Jens Wille},
       :email        => %q{jens.wille@gmail.com},
+      :license      => %q{AGPL},
       :homepage     => :blackwinter,
       :extra_files  => FileList['templates/*'].to_a,
       :dependencies => %w[nokogiri unidecode ruby-nuggets simple-rss sinatra]
