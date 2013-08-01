@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RSS2Mail::RSS::Item - rss2mail Application documentation (v0.2.0)</title>
+<title>class RSS2Mail::RSS::Item - rss2mail Application documentation (v0.2.1)</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -490,7 +490,7 @@
 
           
           <div class="method-source-code" id="clean_subject-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 191</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 192</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">clean_subject</span>(<span class="ruby-identifier">str</span>)
   <span class="ruby-identifier">str</span>.<span class="ruby-identifier">replace_diacritics!</span>
   <span class="ruby-identifier">str</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-constant">SUB_RE</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-constant">SUB</span>[<span class="ruby-identifier">m</span>] }
@@ -525,7 +525,7 @@
 
           
           <div class="method-source-code" id="extract_body-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 186</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 187</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">extract_body</span>(<span class="ruby-identifier">expr</span>, <span class="ruby-identifier">attribute</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">elem</span> = <span class="ruby-constant">Nokogiri</span>.<span class="ruby-constant">HTML</span>(<span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">link</span>)).<span class="ruby-identifier">at</span>(<span class="ruby-identifier">expr</span>)
   <span class="ruby-identifier">attribute</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">elem</span>[<span class="ruby-identifier">attribute</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">elem</span>.<span class="ruby-identifier">to_s</span>
@@ -574,6 +574,7 @@
 
   <span class="ruby-identifier">body</span>.<span class="ruby-identifier">encode!</span>(<span class="ruby-identifier">encoding</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">encoding</span>
   <span class="ruby-identifier">body</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">OpenURI</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPError</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- get_body-source -->
           
