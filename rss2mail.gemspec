@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = "rss2mail"
-  s.version = "0.2.1"
+  s.version = "0.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jens Wille"]
-  s.date = "2013-08-01"
+  s.date = "2013-08-06"
   s.description = "Send RSS feeds as e-mail"
   s.email = "jens.wille@gmail.com"
   s.executables = ["rss2mail"]
@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.files = ["lib/rss2mail.rb", "lib/rss2mail/app.rb", "lib/rss2mail/feed.rb", "lib/rss2mail/rss.rb", "lib/rss2mail/util.rb", "lib/rss2mail/version.rb", "bin/rss2mail", "templates/html.erb", "templates/plain.erb", "COPYING", "ChangeLog", "README", "Rakefile", "example/config.ru", "example/feeds.yaml"]
   s.homepage = "http://github.com/blackwinter/rss2mail"
   s.licenses = ["AGPL"]
-  s.rdoc_options = ["--charset", "UTF-8", "--line-numbers", "--all", "--title", "rss2mail Application documentation (v0.2.1)", "--main", "README"]
+  s.rdoc_options = ["--charset", "UTF-8", "--line-numbers", "--all", "--title", "rss2mail Application documentation (v0.2.2)", "--main", "README"]
   s.require_paths = ["lib"]
   s.rubygems_version = "2.0.6"
   s.summary = "Send RSS feeds as e-mail"
