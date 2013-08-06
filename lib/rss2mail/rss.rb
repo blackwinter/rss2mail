@@ -182,7 +182,7 @@ module RSS2Mail
 
         body.encode!(encoding) if encoding
         body
-      rescue OpenURI::HTTPError
+      rescue OpenURI::HTTPError, EOFError
       end
 
       def extract_body(expr, attribute = nil)
