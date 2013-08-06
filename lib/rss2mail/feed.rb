@@ -176,15 +176,14 @@ module RSS2Mail
         }
 
         if rss && !reload
-          sent = feed[:sent]
+          if update = updated
+            rss.items.delete_if { |item| (date = item.date) && date <= update }
+          end
 
-          rss.items.delete_if { |item|
-            if updated && date = item.date
-              date <= updated
-            elsif sent
-              sent.include?(item.link)
-            end
-          }
+          if sent = feed[:sent]
+            set = Set.new(sent)
+            rss.items.delete_if { |item| set.include?(item.link) }
+          end
         end
       else
         log 'Nothing to parse'
