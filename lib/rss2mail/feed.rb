@@ -138,14 +138,20 @@ module RSS2Mail
         open_feed(feed[:url], conditions) { |uri|
           if etag = uri.meta['etag']
             feed[:etag] = etag
+          else
+            feed.delete(:etag)
           end
 
           if mtime = begin; uri.last_modified; rescue ArgumentError; end
             feed[:mtime] = mtime.rfc822
+          else
+            feed.delete(:mtime)
           end
 
           unless etag || mtime
             feed[:updated] = Time.now
+          else
+            feed.delete(:updated)
           end
 
           @content ||= uri.read
