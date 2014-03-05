@@ -2,42 +2,42 @@
 
 <html>
 <head>
-<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta charset="UTF-8">
 
-<title>Table of Contents - rss2mail Application documentation (v0.2.2)</title>
+<title>Table of Contents - rss2mail Application documentation (v0.3.0)</title>
 
-<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+<link href="./fonts.css" rel="stylesheet">
+<link href="./rdoc.css" rel="stylesheet">
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
 </script>
 
-<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+<script src="./js/jquery.js"></script>
+<script src="./js/navigation.js"></script>
+<script src="./js/search_index.js"></script>
+<script src="./js/search.js"></script>
+<script src="./js/searcher.js"></script>
+<script src="./js/darkfish.js"></script>
 
 
-<body class="indexpage">
-<h1>Table of Contents - rss2mail Application documentation (v0.2.2)</h1>
+<body id="top" class="table-of-contents">
+<main role="main">
+<h1 class="class">Table of Contents - rss2mail Application documentation (v0.3.0)</h1>
 
-<h2>Pages</h2>
+<h2 id="pages">Pages</h2>
 <ul>
   <li class="file">
     <a href="COPYING.html">COPYING</a>
 
-    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
-    <ul class="initially-hidden">
+    <ul>
       <li><a href="COPYING.html#label-License+for+rss2mail">License for rss2mail</a>
     </ul>
   </li>
     <li class="file">
     <a href="ChangeLog.html">ChangeLog</a>
 
-    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
-    <ul class="initially-hidden">
+    <ul>
       <li><a href="ChangeLog.html#label-Revision+history+for+rss2mail">Revision history for rss2mail</a>
       <li><a href="ChangeLog.html#label-0.0.1+%5B2008-12-18%5D">0.0.1 [2008-12-18]</a>
     </ul>
@@ -45,8 +45,7 @@
     <li class="file">
     <a href="README.html">README</a>
 
-    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
-    <ul class="initially-hidden">
+    <ul>
       <li><a href="README.html#label-rss2mail+-+Send+RSS+feeds+as+e-mail">rss2mail - Send RSS feeds as e-mail</a>
       <li><a href="README.html#label-VERSION">VERSION</a>
       <li><a href="README.html#label-DESCRIPTION">DESCRIPTION</a>
@@ -58,121 +57,265 @@
   
 </ul>
 
-<h2 id="classes">Classes/Modules</h2>
+<h2 id="classes">Classes and Modules</h2>
 <ul>
   <li class="module">
-    <a href="ERB.html">ERB</a>
+    <a href="Net.html">Net</a>
   </li>
-    <li class="class">
+  <li class="class">
+    <a href="Net/LMTP.html">Net::LMTP</a>
+  </li>
+  <li class="class">
     <a href="Object.html">Object</a>
   </li>
-    <li class="module">
-    <a href="RSS2Mail.html">RSS2Mail</a>
-  </li>
-    <li class="class">
+  <li class="class">
     <a href="RSS2Mail/Feed.html">RSS2Mail::Feed</a>
   </li>
-    <li class="module">
-    <a href="RSS2Mail/Feed/MAIL.html">RSS2Mail::Feed::MAIL</a>
-  </li>
-    <li class="class">
+  <li class="class">
     <a href="RSS2Mail/RSS.html">RSS2Mail::RSS</a>
   </li>
-    <li class="class">
+  <li class="class">
     <a href="RSS2Mail/RSS/Item.html">RSS2Mail::RSS::Item</a>
   </li>
-    <li class="module">
+  <li class="module">
+    <a href="RSS2Mail/Transport.html">RSS2Mail::Transport</a>
+  </li>
+  <li class="module">
+    <a href="RSS2Mail/Transport/LMTP.html">RSS2Mail::Transport::LMTP</a>
+  </li>
+  <li class="module">
+    <a href="RSS2Mail/Transport/Mail.html">RSS2Mail::Transport::Mail</a>
+  </li>
+  <li class="module">
+    <a href="RSS2Mail/Transport/SMTP.html">RSS2Mail::Transport::SMTP</a>
+  </li>
+  <li class="module">
     <a href="RSS2Mail/Util.html">RSS2Mail::Util</a>
   </li>
-    <li class="module">
+  <li class="module">
     <a href="RSS2Mail/Version.html">RSS2Mail::Version</a>
   </li>
-    <li class="module">
-    <a href="Rack.html">Rack</a>
-  </li>
-    <li class="module">
-    <a href="Rack/Auth.html">Rack::Auth</a>
-  </li>
-  
 </ul>
 
 <h2 id="methods">Methods</h2>
 <ul>
-  
-    <li class="method"><a href="RSS2Mail/RSS.html#method-c-feed">::feed &mdash; RSS2Mail::RSS</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-c-new">::new &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/Feed.html#method-c-new">::new &mdash; RSS2Mail::Feed</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS.html#method-c-new">::new &mdash; RSS2Mail::RSS</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS.html#method-c-parse">::parse &mdash; RSS2Mail::RSS</a>
-  
-    <li class="method"><a href="RSS2Mail/Version.html#method-c-to_a">::to_a &mdash; RSS2Mail::Version</a>
-  
-    <li class="method"><a href="RSS2Mail/Version.html#method-c-to_s">::to_s &mdash; RSS2Mail::Version</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-author">#author &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-body">#body &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-clean_subject">#clean_subject &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-date">#date &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/Feed.html#method-i-deliver">#deliver &mdash; RSS2Mail::Feed</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-description">#description &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/Util.html#method-i-discover_feed">#discover_feed &mdash; RSS2Mail::Util</a>
-  
-    <li class="method"><a href="RSS2Mail/Feed.html#method-i-error">#error &mdash; RSS2Mail::Feed</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-extract_body">#extract_body &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/Feed.html#method-i-get">#get &mdash; RSS2Mail::Feed</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-get_body">#get_body &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-get_description">#get_description &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-get_value_for">#get_value_for &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS.html#method-i-items">#items &mdash; RSS2Mail::RSS</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-link">#link &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/Feed.html#method-i-log">#log &mdash; RSS2Mail::Feed</a>
-  
-    <li class="method"><a href="RSS2Mail/Util.html#method-i-open_feed">#open_feed &mdash; RSS2Mail::Util</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS.html#method-i-parse">#parse &mdash; RSS2Mail::RSS</a>
-  
-    <li class="method"><a href="RSS2Mail/Feed.html#method-i-parse">#parse &mdash; RSS2Mail::Feed</a>
-  
-    <li class="method"><a href="Object.html#method-i-prepare">#prepare &mdash; Object</a>
-  
-    <li class="method"><a href="RSS2Mail/Feed.html#method-i-render">#render &mdash; RSS2Mail::Feed</a>
-  
-    <li class="method"><a href="RSS2Mail/Feed.html#method-i-send_mail">#send_mail &mdash; RSS2Mail::Feed</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS.html#method-i-simple-3F">#simple? &mdash; RSS2Mail::RSS</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS.html#method-i-simple_parse">#simple_parse &mdash; RSS2Mail::RSS</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-subject">#subject &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-title">#title &mdash; RSS2Mail::RSS::Item</a>
-  
-    <li class="method"><a href="RSS2Mail/RSS/Item.html#method-i-value_for">#value_for &mdash; RSS2Mail::RSS::Item</a>
-  
+
+  <li class="method">
+    <a href="RSS2Mail/RSS.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Feed.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RSS2Mail::Feed</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-author">#author</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-body">#body</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Transport/Mail.html#method-i-check_deliver_requirements">#check_deliver_requirements</a>
+    &mdash;
+    <span class="container">RSS2Mail::Transport::Mail</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-clean_subject">#clean_subject</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-date">#date</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Feed.html#method-i-deliver">#deliver</a>
+    &mdash;
+    <span class="container">RSS2Mail::Feed</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Transport/Mail.html#method-i-deliver_mail">#deliver_mail</a>
+    &mdash;
+    <span class="container">RSS2Mail::Transport::Mail</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Transport/LMTP.html#method-i-deliver_mail">#deliver_mail</a>
+    &mdash;
+    <span class="container">RSS2Mail::Transport::LMTP</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Transport/SMTP.html#method-i-deliver_mail">#deliver_mail</a>
+    &mdash;
+    <span class="container">RSS2Mail::Transport::SMTP</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Transport/SMTP.html#method-i-deliver_smtp">#deliver_smtp</a>
+    &mdash;
+    <span class="container">RSS2Mail::Transport::SMTP</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-description">#description</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Util.html#method-i-discover_feed">#discover_feed</a>
+    &mdash;
+    <span class="container">RSS2Mail::Util</span>
+
+  <li class="method">
+    <a href="Net/LMTP.html#method-i-ehlo">#ehlo</a>
+    &mdash;
+    <span class="container">Net::LMTP</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Feed.html#method-i-error">#error</a>
+    &mdash;
+    <span class="container">RSS2Mail::Feed</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-extract_body">#extract_body</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS.html#method-i-feed">#feed</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Feed.html#method-i-get">#get</a>
+    &mdash;
+    <span class="container">RSS2Mail::Feed</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-get_body">#get_body</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-get_description">#get_description</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-get_value_for">#get_value_for</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="Net/LMTP.html#method-i-helo">#helo</a>
+    &mdash;
+    <span class="container">Net::LMTP</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS.html#method-i-items">#items</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-link">#link</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Feed.html#method-i-log">#log</a>
+    &mdash;
+    <span class="container">RSS2Mail::Feed</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Util.html#method-i-open_feed">#open_feed</a>
+    &mdash;
+    <span class="container">RSS2Mail::Util</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS.html#method-i-parse">#parse</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Feed.html#method-i-parse">#parse</a>
+    &mdash;
+    <span class="container">RSS2Mail::Feed</span>
+
+  <li class="method">
+    <a href="Object.html#method-i-prepare">#prepare</a>
+    &mdash;
+    <span class="container">Object</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Feed.html#method-i-render">#render</a>
+    &mdash;
+    <span class="container">RSS2Mail::Feed</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Feed.html#method-i-send_mail">#send_mail</a>
+    &mdash;
+    <span class="container">RSS2Mail::Feed</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS.html#method-i-simple-3F">#simple?</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS.html#method-i-simple_parse">#simple_parse</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS.html#method-i-strict_parse">#strict_parse</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-subject">#subject</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-title">#title</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Version.html#method-i-to_a">#to_a</a>
+    &mdash;
+    <span class="container">RSS2Mail::Version</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Version.html#method-i-to_s">#to_s</a>
+    &mdash;
+    <span class="container">RSS2Mail::Version</span>
+
+  <li class="method">
+    <a href="RSS2Mail/Feed.html#method-i-transport_from">#transport_from</a>
+    &mdash;
+    <span class="container">RSS2Mail::Feed</span>
+
+  <li class="method">
+    <a href="RSS2Mail/RSS/Item.html#method-i-value_for">#value_for</a>
+    &mdash;
+    <span class="container">RSS2Mail::RSS::Item</span>
 </ul>
+</main>
 
 
-<footer id="validator-badges">
-  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
-  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.1.
-  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

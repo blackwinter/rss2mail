@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RSS2Mail::Version - rss2mail Application documentation (v0.3.0)</title>
+<title>class Net::LMTP - rss2mail Application documentation (v0.3.0)</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -21,7 +21,7 @@
 <script src="../js/darkfish.js"></script>
 
 
-<body id="top" role="document" class="module">
+<body id="top" role="document" class="class">
 <nav role="navigation">
   <div id="project-navigation">
     <div id="home-section" role="region" title="Quick navigation" class="nav-section">
@@ -57,7 +57,14 @@
 
   <div id="class-metadata">
     
-    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">SMTP
+  
+</div>
+
     
     
     <!-- Method Quickref -->
@@ -66,9 +73,9 @@
 
   <ul class="link-list" role="directory">
     
-    <li ><a href="#method-i-to_a">#to_a</a>
+    <li ><a href="#method-i-ehlo">#ehlo</a>
     
-    <li ><a href="#method-i-to_s">#to_s</a>
+    <li ><a href="#method-i-helo">#helo</a>
     
   </ul>
 </div>
@@ -76,9 +83,9 @@
   </div>
 </nav>
 
-<main role="main" aria-labelledby="module-RSS2Mail::Version">
-  <h1 id="module-RSS2Mail::Version" class="module">
-    module RSS2Mail::Version
+<main role="main" aria-labelledby="class-Net::LMTP">
+  <h1 id="class-Net::LMTP" class="class">
+    class Net::LMTP
   </h1>
 
   <section class="description">
@@ -94,30 +101,6 @@
     
 
     
-    <section class="constants-list">
-      <header>
-        <h3>Constants</h3>
-      </header>
-      <dl>
-      
-        <dt id="MAJOR">MAJOR
-        
-        <dd>
-        
-      
-        <dt id="MINOR">MINOR
-        
-        <dd>
-        
-      
-        <dt id="TINY">TINY
-        
-        <dd>
-        
-      
-      </dl>
-    </section>
-    
 
     
 
@@ -128,11 +111,11 @@
        </header>
 
     
-      <div id="method-i-to_a" class="method-detail ">
+      <div id="method-i-ehlo" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">to_a</span><span
-            class="method-args">()</span>
+          <span class="method-name">ehlo</span><span
+            class="method-args">(domain)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -141,15 +124,15 @@
 
         <div class="method-description">
           
-          <p>Returns array representation.</p>
+          <p>Send LMTP&#39;s LHLO command instead of ESMTP&#39;s EHLO command</p>
           
           
 
           
-          <div class="method-source-code" id="to_a-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/version.rb, line 12</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_a</span>
-  [<span class="ruby-constant">MAJOR</span>, <span class="ruby-constant">MINOR</span>, <span class="ruby-constant">TINY</span>]
+          <div class="method-source-code" id="ehlo-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/transport.rb, line 117</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ehlo</span>(<span class="ruby-identifier">domain</span>)
+  <span class="ruby-identifier">getok</span>(<span class="ruby-node">&quot;LHLO #{domain}&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -161,11 +144,11 @@
       </div>
 
     
-      <div id="method-i-to_s" class="method-detail ">
+      <div id="method-i-helo" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">to_s</span><span
-            class="method-args">()</span>
+          <span class="method-name">helo</span><span
+            class="method-args">(domain)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -174,15 +157,15 @@
 
         <div class="method-description">
           
-          <p>Short-cut for version string.</p>
+          <p>Send LMTP&#39;s LHLO command instead of SMTP&#39;s HELO command</p>
           
           
 
           
-          <div class="method-source-code" id="to_s-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/version.rb, line 17</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
-  <span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;.&#39;</span>)
+          <div class="method-source-code" id="helo-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/transport.rb, line 112</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">helo</span>(<span class="ruby-identifier">domain</span>)
+  <span class="ruby-identifier">getok</span>(<span class="ruby-node">&quot;LHLO #{domain}&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
