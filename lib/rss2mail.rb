@@ -31,3 +31,6 @@ require 'rss2mail/rss'
 
 module RSS2Mail
 end
+
+require 'nuggets/pluggable'
+Nuggets::Pluggable.load_plugins_for(RSS2Mail)
