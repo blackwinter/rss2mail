@@ -1,7 +1,9 @@
+# encoding: utf-8
+
 #--
 ###############################################################################
 #                                                                             #
-# rss2mail -- Send RSS feeds as e-mail                                        #
+# A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
 # Copyright (C) 2007-2014 Jens Wille                                          #
 #                                                                             #
@@ -24,10 +26,99 @@
 ###############################################################################
 #++
 
-require 'rss2mail/transport'
-require 'rss2mail/util'
-require 'rss2mail/feed'
-require 'rss2mail/rss'
-
 module RSS2Mail
+
+  module Transport
+
+    HOST = ENV['HOSTNAME'] || ENV['HOST'] || %x{hostname}.chomp.freeze
+
+    FROM = "From: rss2mail@#{HOST}".freeze
+
+    module Mail
+
+      require 'open3'
+      require 'nuggets/file/which'
+
+      CMD = ENV['RSS2MAIL_MAIL_CMD'] || 'mail'.freeze
+
+      BIN = ENV['RSS2MAIL_MAIL_BIN'] || File.which(CMD)
+
+      def check_deliver_requirements
+        raise "Mail command not found: #{CMD}" unless BIN
+      end
+
+      def deliver_mail(to, subject, body, type)
+        Open3.popen3(
+          BIN, '-e',
+          '-a', type,
+          '-a', FROM,
+          '-s', subject,
+          *to
+        ) { |mail, _, _|
+          mail.puts body
+        }
+      end
+
+    end
+
+    module SMTP
+
+      require 'net/smtp'
+      require 'securerandom'
+
+      def deliver_mail(to, *args)
+        deliver_smtp(Net::SMTP, @smtp, [to], *args)
+      end
+
+      private
+
+      def deliver_smtp(klass, args, to, subject, body, type)
+        klass.start(*args) { |smtp|
+          to.each { |_to|
+            smtp.send_message(<<-EOT, FROM, *_to)
+#{FROM}
+To: #{Array(_to).join(', ')}
+Date: #{Time.now.rfc822}
+Subject: #{subject}
+Message-Id: #{SecureRandom.uuid}
+#{type}
+
+#{body}
+            EOT
+          }
+        }
+      end
+
+    end
+
+    module LMTP
+
+      include SMTP
+
+      def deliver_mail(to, *args)
+        deliver_smtp(Net::LMTP, @lmtp, to, *args)
+      end
+
+    end
+
+  end
+
+end
+
+module Net
+
+  class LMTP < SMTP
+
+    # Send LMTP's LHLO command instead of SMTP's HELO command
+    def helo(domain)
+      getok("LHLO #{domain}")
+    end
+
+    # Send LMTP's LHLO command instead of ESMTP's EHLO command
+    def ehlo(domain)
+      getok("LHLO #{domain}")
+    end
+
+  end
+
 end

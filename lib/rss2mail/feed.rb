@@ -25,9 +25,6 @@
 #++
 
 require 'erb'
-require 'open3'
-require 'nuggets/file/which'
-require 'nuggets/string/evaluate'
 
 module RSS2Mail
 
@@ -35,18 +32,16 @@ module RSS2Mail
 
     include Util
 
-    unless MAIL = File.which(mail = 'mail'.freeze)
-      class << MAIL; self; end.send(:define_method, :to_s) { mail }
-    end
-
-    HOST = ENV['HOSTNAME'] || ENV['HOST'] || %x{hostname}.chomp.freeze
-
-    FROM = "From: rss2mail@#{HOST}".freeze
-
     KEEP = 100
 
     def initialize(feed, options = {})
       raise TypeError, "Hash expected, got #{feed.class}" unless feed.is_a?(Hash)
+
+      required = [:url, :to, :title].delete_if { |key| feed.key?(key) }
+
+      unless required.empty?
+        raise ArgumentError, "Feed incomplete: #{required.join(', ')} missing"
+      end
 
       @feed    = feed
       @simple  = feed[:simple]
@@ -56,20 +51,18 @@ module RSS2Mail
       @verbose = options[:verbose]
       @debug   = options[:debug]
 
-      required = [:url, :to, :title]
-      required.delete_if { |key| feed.key?(key) }
+      klass, opt = transport_from(options)
+      @transport = "#{klass.name.split('::').last} @ #{opt}"
 
-      unless required.empty?
-        raise ArgumentError, "Feed incomplete: #{required.join(', ')} missing"
-      end
+      extend klass
     end
 
     attr_reader :feed, :simple, :updated,
                 :reload, :verbose, :debug,
-                :content, :rss
+                :transport, :content, :rss
 
     def deliver(templates)
-      raise "Mail command not found: #{MAIL}" unless MAIL
+      check_deliver_requirements if respond_to?(:check_deliver_requirements)
 
       if (to = Array(feed[:to])).empty?
         log 'No one to send to'
@@ -86,12 +79,11 @@ module RSS2Mail
         return
       end
 
-      type     = feed[:content_type] || 'text/html'
-      encoding = feed[:encoding]     || 'UTF-8'
+      type = feed[:content_type] || 'text/html'
 
-      type_header = "Content-type: #{type}; charset=#{encoding}"
-
-      unless template = templates[type[/\/(.*)/, 1]]
+      if template = templates[type[/\/(.*)/, 1]]
+        type = "Content-type: #{type}; charset=#{feed[:encoding] || 'UTF-8'}"
+      else
         log "Template not found: #{type}"
         return
       end
@@ -102,7 +94,7 @@ module RSS2Mail
       items.each { |item|
         link, subject, body = render(feed, item, template)
 
-        send_mail(type_header, to, title, subject, body) {
+        send_mail(to, "[#{title}] #{subject}", body, type) {
           sent << link
           count += 1
         }
@@ -116,6 +108,18 @@ module RSS2Mail
     end
 
     private
+
+    def transport_from(options)
+      if lmtp = options[:lmtp]
+        @lmtp = lmtp.split(':')
+        [Transport::LMTP, lmtp]
+      elsif smtp = options[:smtp]
+        @smtp = smtp.split(':')
+        [Transport::SMTP, smtp]
+      else
+        [klass = Transport::Mail, "#{klass::CMD} = #{klass::BIN.inspect}"]
+      end
+    end
 
     def get(reload = reload)
       conditions = {}
@@ -207,18 +211,14 @@ module RSS2Mail
       [link, subject, ERB.new(template).result(binding)]
     end
 
-    def send_mail(type_header, to, title, subject, body)
+    def send_mail(*args)
       return if debug
 
-      Open3.popen3(MAIL, '-e', '-a', type_header, '-a', FROM,
-        '-s', "[#{title}] #{subject}", *to) { |mail, _, _|
-        mail.puts body
-        mail.close
-      }
+      deliver_mail(*args)
 
       yield if block_given?
     rescue Exception => err
-      error err, 'while sending mail', cmd
+      error err, 'while sending mail', transport
     end
 
     def log(msg, verbose = verbose)
