@@ -5,7 +5,7 @@
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2013 Jens Wille                                          #
+# Copyright (C) 2007-2014 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <jens.wille@gmail.com>                                       #
@@ -182,7 +182,7 @@ module RSS2Mail
 
         body.encode!(encoding) if encoding
         body
-      rescue OpenURI::HTTPError, EOFError
+      rescue OpenURI::HTTPError, EOFError, SocketError
       end
 
       def extract_body(expr, attribute = nil)
