@@ -56,8 +56,8 @@ module RSS2Mail
 
       def feed(*args)
         new(*args)
-      rescue ::SimpleRSSError, ::RSS::NotWellFormedError => err
-        yield err if block_given?
+      rescue Exception => err
+        block_given? ? yield(err) : raise
       end
 
     end
@@ -80,7 +80,11 @@ module RSS2Mail
     end
 
     def parse
-      ::RSS::Parser.parse(content, false) || simple_parse
+      strict_parse || simple_parse
+    end
+
+    def strict_parse
+      ::RSS::Parser.parse(content, false)
     end
 
     def simple_parse

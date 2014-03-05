@@ -3,7 +3,7 @@
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2013 Jens Wille                                          #
+# Copyright (C) 2007-2014 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <jens.wille@gmail.com>                                       #
@@ -57,7 +57,7 @@ module RSS2Mail
       @debug   = options[:debug]
 
       required = [:url, :to, :title]
-      required.delete_if { |key| feed.has_key?(key) }
+      required.delete_if { |key| feed.key?(key) }
 
       unless required.empty?
         raise ArgumentError, "Feed incomplete: #{required.join(', ')} missing"
@@ -158,8 +158,8 @@ module RSS2Mail
         }
 
         log feed.values_at(:etag, :mtime, :updated).inspect, debug
-      rescue OpenURI::HTTPError
-        log 'Feed not found or unchanged'
+      rescue OpenURI::HTTPError => err
+        log "Feed not found or unchanged: #{err} (#{err.class})"
       rescue Exception => err
         error err, 'while getting feed'
       end
@@ -217,7 +217,7 @@ module RSS2Mail
       }
 
       yield if block_given?
-    rescue Errno::EPIPE, IOError => err
+    rescue Exception => err
       error err, 'while sending mail', cmd
     end
 
