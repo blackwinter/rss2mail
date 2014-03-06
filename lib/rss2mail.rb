@@ -25,6 +25,7 @@
 #++
 
 require 'erb'
+require 'nuggets/env/user_home'
 
 require 'rss2mail/transport'
 require 'rss2mail/util'
@@ -32,6 +33,19 @@ require 'rss2mail/feed'
 require 'rss2mail/rss'
 
 module RSS2Mail
+
+  BASE_PATH          = ENV['RSS2MAIL_BASE_PATH'] ||
+    File.expand_path('../..', __FILE__)
+
+  TEMPLATE_PATH      = ENV['RSS2MAIL_TEMPLATE_PATH'] ||
+    File.join(BASE_PATH, 'templates')
+
+  DEFAULT_FEEDS_PATH = ENV['RSS2MAIL_DEFAULT_FEEDS_PATH'] ||
+    File.join(ENV.user_home, '.rss2mail')
+
+  DEFAULT_FEEDS_FILE = ENV['RSS2MAIL_DEFAULT_FEEDS_FILE'] ||
+    File.join(BASE_PATH, 'feeds.yaml')
+
 end
 
 require 'nuggets/pluggable'
