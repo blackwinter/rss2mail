@@ -24,6 +24,8 @@
 ###############################################################################
 #++
 
+require 'erb'
+
 require 'rss2mail/transport'
 require 'rss2mail/util'
 require 'rss2mail/feed'

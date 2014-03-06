@@ -24,8 +24,6 @@
 ###############################################################################
 #++
 
-require 'erb'
-
 module RSS2Mail
 
   class Feed
@@ -110,12 +108,23 @@ module RSS2Mail
     private
 
     def transport_from(options)
-      if lmtp = options[:lmtp]
-        @lmtp = lmtp.split(':')
-        [Transport::LMTP, lmtp]
-      elsif smtp = options[:smtp]
-        @smtp = smtp.split(':')
-        [Transport::SMTP, smtp]
+      if lmtp = options[:lmtp] or smtp = options[:smtp]
+        klass = smtp ? Transport::SMTP : Transport::LMTP
+
+        case @smtp = lmtp || smtp
+          when Array  # ok
+          when true   then @smtp = []
+          when Fixnum then @smtp = [nil, @smtp]
+          when String then @smtp = @smtp.split(':')
+          else raise TypeError, "Array expected, got #{@smtp.class}"
+        end
+
+        host, port = @smtp.shift, @smtp.shift
+
+        host = klass::DEFAULT_HOST if host.nil? || host.empty?
+        port = klass::DEFAULT_PORT if port.nil?
+
+        [klass, @smtp.unshift(port.to_i).unshift(host)[0, 4].join(':')]
       else
         [klass = Transport::Mail, "#{klass::CMD} = #{klass::BIN.inspect}"]
       end

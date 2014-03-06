@@ -66,25 +66,34 @@ module RSS2Mail
       require 'net/smtp'
       require 'securerandom'
 
+      DEFAULT_HOST = 'localhost'.freeze
+      DEFAULT_PORT = Net::SMTP.default_port
+
+      MESSAGE_TEMPLATE = <<-EOT
+<%= FROM %>
+To: <%= Array(to).join(', ') %>
+Date: <%= Time.now.rfc822 %>
+Subject: <%= subject %>
+Message-Id: <%= SecureRandom.uuid %>
+<%= type %>
+
+<%= body %>
+      EOT
+
       def deliver_mail(to, *args)
-        deliver_smtp(Net::SMTP, @smtp, [to], *args)
+        deliver_smtp(Net::SMTP, [to], *args)
       end
 
       private
 
-      def deliver_smtp(klass, args, to, subject, body, type)
-        klass.start(*args) { |smtp|
-          to.each { |_to|
-            smtp.send_message(<<-EOT, FROM, *_to)
-#{FROM}
-To: #{Array(_to).join(', ')}
-Date: #{Time.now.rfc822}
-Subject: #{subject}
-Message-Id: #{SecureRandom.uuid}
-#{type}
-
-#{body}
-            EOT
+      def deliver_smtp(klass, tos, subject, body, type)
+        klass.start(*@smtp) { |smtp|
+          tos.each { |to|
+            smtp.send_message(
+              ERB.new(MESSAGE_TEMPLATE).result(binding),
+              FROM,
+              *to
+            )
           }
         }
       end
@@ -95,8 +104,10 @@ Message-Id: #{SecureRandom.uuid}
 
       include SMTP
 
+      DEFAULT_PORT = SMTP::DEFAULT_PORT - 1
+
       def deliver_mail(to, *args)
-        deliver_smtp(Net::LMTP, @lmtp, to, *args)
+        deliver_smtp(Net::LMTP, to, *args)
       end
 
     end
