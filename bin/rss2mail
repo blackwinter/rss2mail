@@ -5,7 +5,7 @@
 #                                                                             #
 # rss2mail -- Send RSS feeds as e-mail                                        #
 #                                                                             #
-# Copyright (C) 2007-2013 Jens Wille                                          #
+# Copyright (C) 2007-2014 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <jens.wille@gmail.com>                                       #
@@ -39,6 +39,8 @@ abort USAGE if ARGV.empty?
 
 options = {
   :files   => nil,
+  :smtp    => nil,
+  :lmtp    => nil,
   :reload  => false,
   :verbose => false,
   :debug   => false
@@ -53,6 +55,14 @@ OptionParser.new { |opts|
     abort "Can't read directory: #{d}" unless File.readable?(d)
 
     options[:files] = Dir[File.join(d, '*.yaml')]
+  }
+
+  %w[smtp lmtp].each { |type|
+    klass = RSS2Mail::Transport.const_get(type.upcase)
+
+    opts.on("-#{type[0, 1]}", "--#{type} [HOST[:PORT]]", "Send mail through #{type.upcase} server (Default host: #{klass::DEFAULT_HOST}, default port: #{klass::DEFAULT_PORT})") { |h|
+      options[type.to_sym] = h.to_s
+    }
   }
 
   opts.on('-r', '--reload', 'Reload feeds') {
