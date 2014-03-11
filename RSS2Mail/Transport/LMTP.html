@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RSS2Mail::Transport::LMTP - rss2mail Application documentation (v0.3.0)</title>
+<title>module RSS2Mail::Transport::LMTP - rss2mail Application documentation (v0.4.0)</title>
 
 <link href="../../fonts.css" rel="stylesheet">
 <link href="../../rdoc.css" rel="stylesheet">
@@ -103,6 +103,20 @@
     
 
     
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="DEFAULT_PORT">DEFAULT_PORT
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
 
     
 
@@ -132,9 +146,9 @@
 
           
           <div class="method-source-code" id="deliver_mail-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/transport.rb, line 97</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/transport.rb, line 108</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">deliver_mail</span>(<span class="ruby-identifier">to</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-  <span class="ruby-identifier">deliver_smtp</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">LMTP</span>, <span class="ruby-ivar">@lmtp</span>, <span class="ruby-identifier">to</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-identifier">deliver_smtp</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">LMTP</span>, <span class="ruby-identifier">to</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           

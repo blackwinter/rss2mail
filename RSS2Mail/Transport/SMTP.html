@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RSS2Mail::Transport::SMTP - rss2mail Application documentation (v0.3.0)</title>
+<title>module RSS2Mail::Transport::SMTP - rss2mail Application documentation (v0.4.0)</title>
 
 <link href="../../fonts.css" rel="stylesheet">
 <link href="../../rdoc.css" rel="stylesheet">
@@ -94,6 +94,30 @@
     
 
     
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="DEFAULT_HOST">DEFAULT_HOST
+        
+        <dd>
+        
+      
+        <dt id="DEFAULT_PORT">DEFAULT_PORT
+        
+        <dd>
+        
+      
+        <dt id="MESSAGE_TEMPLATE">MESSAGE_TEMPLATE
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
 
     
 
@@ -123,9 +147,9 @@
 
           
           <div class="method-source-code" id="deliver_mail-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/transport.rb, line 68</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/transport.rb, line 82</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">deliver_mail</span>(<span class="ruby-identifier">to</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-  <span class="ruby-identifier">deliver_smtp</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTP</span>, <span class="ruby-ivar">@smtp</span>, [<span class="ruby-identifier">to</span>], <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-identifier">deliver_smtp</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTP</span>, [<span class="ruby-identifier">to</span>], <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -149,7 +173,7 @@
         
         <div class="method-heading">
           <span class="method-name">deliver_smtp</span><span
-            class="method-args">(klass, args, to, subject, body, type)</span>
+            class="method-args">(klass, tos, subject, body, type)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -164,22 +188,18 @@
 
           
           <div class="method-source-code" id="deliver_smtp-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/transport.rb, line 74</span>
-      <span class="ruby-keyword">def</span> <span class="ruby-identifier">deliver_smtp</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">args</span>, <span class="ruby-identifier">to</span>, <span class="ruby-identifier">subject</span>, <span class="ruby-identifier">body</span>, <span class="ruby-identifier">type</span>)
-        <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">start</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">smtp</span><span class="ruby-operator">|</span>
-          <span class="ruby-identifier">to</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_to</span><span class="ruby-operator">|</span>
-            <span class="ruby-identifier">smtp</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-string">&quot;#{FROM}
-To: #{Array(_to).join(&#39;, &#39;)}
-Date: #{Time.now.rfc822}
-Subject: #{subject}
-Message-Id: #{SecureRandom.uuid}
-#{type}
-
-#{body}
-&quot;</span>, <span class="ruby-constant">FROM</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">_to</span>)
-          }
-        }
-      <span class="ruby-keyword">end</span></pre>
+            <pre><span class="ruby-comment"># File lib/rss2mail/transport.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">deliver_smtp</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">tos</span>, <span class="ruby-identifier">subject</span>, <span class="ruby-identifier">body</span>, <span class="ruby-identifier">type</span>)
+  <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">start</span>(<span class="ruby-operator">*</span><span class="ruby-ivar">@smtp</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">smtp</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">tos</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">to</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">smtp</span>.<span class="ruby-identifier">send_message</span>(
+        <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">MESSAGE_TEMPLATE</span>).<span class="ruby-identifier">result</span>(<span class="ruby-identifier">binding</span>),
+        <span class="ruby-constant">FROM</span>,
+        <span class="ruby-operator">*</span><span class="ruby-identifier">to</span>
+      )
+    }
+  }
+<span class="ruby-keyword">end</span></pre>
           </div>
           
         </div>
