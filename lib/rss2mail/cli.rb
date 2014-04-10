@@ -120,20 +120,6 @@ module RSS2Mail
       }
     end
 
-    def generic_opts(opts)
-      opts.on('-v', '--verbose', 'Be verbose') {
-        options[:verbose] = true
-      }
-
-      opts.on('-D', '--debug', "Print debug output; don't send any mails") {
-        options[:debug] = true
-      }
-
-      opts.separator ''
-
-      super
-    end
-
     def default_files
       File.directory?(dir = DEFAULT_FEEDS_PATH) ?
         Dir[File.join(dir, '*.yaml')] : [DEFAULT_FEEDS_FILE]

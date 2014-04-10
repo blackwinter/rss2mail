@@ -13,7 +13,7 @@ begin
       :license      => %q{AGPL-3.0},
       :homepage     => :blackwinter,
       :extra_files  => FileList['templates/*'].to_a,
-      :dependencies => %w[nokogiri simple-rss sinatra unidecoder] << ['ruby-nuggets', '>= 0.9.6']
+      :dependencies => %w[nokogiri simple-rss sinatra unidecoder] << ['ruby-nuggets', '>= 0.9.8']
     }
   }}
 rescue LoadError => err
