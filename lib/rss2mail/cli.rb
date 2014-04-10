@@ -70,7 +70,7 @@ module RSS2Mail
 
       (options.delete(:files) || default_files).each { |feeds_file|
         feeds = begin
-          YAML.load_file(feeds_file)
+          SafeYAML.load_file(feeds_file, :deserialize_symbols => true)
         rescue Errno::ENOENT
           warn "Feeds file not found: #{feeds_file}"
           next

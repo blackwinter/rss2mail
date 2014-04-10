@@ -26,14 +26,14 @@
 ###############################################################################
 #++
 
-require 'yaml'
 require 'sinatra'
 require 'rss2mail/util'
+require 'safe_yaml/load'
 
 use Rack::Auth::Basic do |user, pass|
   @auth ||= begin
     file = File.join(settings.root, 'auth.yaml')
-    File.readable?(file) ? YAML.load_file(file) : {}
+    File.readable?(file) ? SafeYAML.load_file(file) : {}
   end
 
   @auth[user] == pass
@@ -74,7 +74,8 @@ def prepare
   user = request.env['REMOTE_USER'] or error(400)
 
   @feeds_file = File.join(settings.root, 'feeds.d', "#{user}.yaml")
-  @feeds      = File.readable?(@feeds_file) ? YAML.load_file(@feeds_file) : {}
+  @feeds      = File.readable?(@feeds_file) ?
+    SafeYAML.load_file(@feeds_file, :deserialize_symbols => true) : {}
   @targets    = @feeds.keys.sort_by { |t, _| t.to_s }
 end
 
