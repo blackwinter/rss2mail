@@ -13,10 +13,9 @@ recipients. See <tt>example/</tt> directory for a sample configuration file.
 
 == LINKS
 
-<b></b>
-Documentation:: http://blackwinter.github.com/rss2mail
-Source code::   http://github.com/blackwinter/rss2mail
-RubyGem::       http://rubygems.org/gems/rss2mail
+Documentation:: https://blackwinter.github.io/rss2mail/
+Source code::   https://github.com/blackwinter/rss2mail
+RubyGem::       https://rubygems.org/gems/rss2mail
 
 
 == AUTHORS
