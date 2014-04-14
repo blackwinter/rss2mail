@@ -24,24 +24,23 @@
 ###############################################################################
 #++
 
-require 'nuggets/cli'
-
+require 'cyclops'
 require 'rss2mail'
 
 module RSS2Mail
 
-  class CLI < Nuggets::CLI
+  class CLI < Cyclops
 
     class << self
 
       def defaults
         super.merge(
-          :files   => nil,
-          :smtp    => nil,
-          :lmtp    => nil,
-          :reload  => false,
-          :verbose => false,
-          :debug   => false
+          files:   nil,
+          smtp:    nil,
+          lmtp:    nil,
+          reload:  false,
+          verbose: false,
+          debug:   false
         )
       end
 
@@ -70,7 +69,7 @@ module RSS2Mail
 
       (options.delete(:files) || default_files).each { |feeds_file|
         feeds = begin
-          SafeYAML.load_file(feeds_file, :deserialize_symbols => true)
+          SafeYAML.load_file(feeds_file, deserialize_symbols: true)
         rescue Errno::ENOENT
           warn "Feeds file not found: #{feeds_file}"
           next
@@ -94,30 +93,27 @@ module RSS2Mail
     private
 
     def opts(opts)
-      opts.on('-d', '--directory DIRECTORY', 'Process all feeds in directory') { |dir|
+      opts.option(:directory__DIRECTORY, 'Process all feeds in directory') { |dir|
         quit "#{dir}: No such file or directory" unless File.directory?(dir)
         quit "#{dir}: Permission denied"         unless File.readable?(dir)
 
         options[:files] = Dir[File.join(dir, '*.yaml')]
       }
 
-      opts.separator ''
+      opts.separator
 
       %w[smtp lmtp].each { |type|
         klass = Transport.const_get(type.upcase)
 
-        opts.on("-#{type[0, 1]}", "--#{type} [HOST[:PORT]]",
-                "Send mail through #{type.upcase} server",
+        opts.on("-#{type[0, 1]}", "--#{type} [HOST[:PORT]]", "Send mail through #{type.upcase} server",
                 "[Default host: #{klass::DEFAULT_HOST}, default port: #{klass::DEFAULT_PORT}]") { |host|
           options[type.to_sym] = host.to_s
         }
       }
 
-      opts.separator ''
+      opts.separator
 
-      opts.on('-r', '--reload', 'Reload feeds') {
-        options[:reload] = true
-      }
+      opts.switch(:reload, 'Reload feeds')
     end
 
     def default_files
