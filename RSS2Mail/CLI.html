@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RSS2Mail::CLI - rss2mail Application documentation (v0.4.0)</title>
+<title>class RSS2Mail::CLI - rss2mail Application documentation (v0.4.1)</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -61,7 +61,7 @@
   <h3>Parent</h3>
 
   
-  <p class="link">Nuggets::CLI
+  <p class="link">Cyclops
   
 </div>
 
@@ -76,8 +76,6 @@
     <li ><a href="#method-i-default_files">#default_files</a>
     
     <li class="calls-super" ><a href="#method-i-defaults">#defaults</a>
-    
-    <li class="calls-super" ><a href="#method-i-generic_opts">#generic_opts</a>
     
     <li ><a href="#method-i-opts">#opts</a>
     
@@ -143,15 +141,15 @@
 
           
           <div class="method-source-code" id="defaults-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 37</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 36</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">defaults</span>
   <span class="ruby-keyword">super</span>.<span class="ruby-identifier">merge</span>(
-    <span class="ruby-value">:files</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">nil</span>,
-    <span class="ruby-value">:smtp</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">nil</span>,
-    <span class="ruby-value">:lmtp</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">nil</span>,
-    <span class="ruby-value">:reload</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>,
-    <span class="ruby-value">:verbose</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>,
-    <span class="ruby-value">:debug</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">files</span><span class="ruby-operator">:</span>   <span class="ruby-keyword">nil</span>,
+    <span class="ruby-identifier">smtp</span><span class="ruby-operator">:</span>    <span class="ruby-keyword">nil</span>,
+    <span class="ruby-identifier">lmtp</span><span class="ruby-operator">:</span>    <span class="ruby-keyword">nil</span>,
+    <span class="ruby-identifier">reload</span><span class="ruby-operator">:</span>  <span class="ruby-keyword">false</span>,
+    <span class="ruby-identifier">verbose</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>,
+    <span class="ruby-identifier">debug</span><span class="ruby-operator">:</span>   <span class="ruby-keyword">false</span>
   )
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -183,7 +181,7 @@
 
           
           <div class="method-source-code" id="run-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 54</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 53</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">run</span>(<span class="ruby-identifier">arguments</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">target</span> = <span class="ruby-identifier">arguments</span>.<span class="ruby-identifier">shift</span>
     <span class="ruby-identifier">target</span> = <span class="ruby-identifier">target</span>.<span class="ruby-identifier">to_sym</span>
@@ -203,7 +201,7 @@
 
   (<span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:files</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">default_files</span>).<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">feeds_file</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">feeds</span> = <span class="ruby-keyword">begin</span>
-      <span class="ruby-constant">YAML</span>.<span class="ruby-identifier">load_file</span>(<span class="ruby-identifier">feeds_file</span>)
+      <span class="ruby-constant">SafeYAML</span>.<span class="ruby-identifier">load_file</span>(<span class="ruby-identifier">feeds_file</span>, <span class="ruby-identifier">deserialize_symbols</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span>)
     <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ENOENT</span>
       <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Feeds file not found: #{feeds_file}&quot;</span>
       <span class="ruby-keyword">next</span>
@@ -252,7 +250,7 @@
 
           
           <div class="method-source-code" id="usage-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 50</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">usage</span>
   <span class="ruby-node">&quot;#{super} &lt;target&gt;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -293,58 +291,10 @@
 
           
           <div class="method-source-code" id="default_files-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 137</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 119</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">default_files</span>
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span>(<span class="ruby-identifier">dir</span> = <span class="ruby-constant">DEFAULT_FEEDS_PATH</span>) <span class="ruby-operator">?</span>
     <span class="ruby-constant">Dir</span>[<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">dir</span>, <span class="ruby-string">&#39;*.yaml&#39;</span>)] <span class="ruby-operator">:</span> [<span class="ruby-constant">DEFAULT_FEEDS_FILE</span>]
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-generic_opts" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generic_opts</span><span
-            class="method-args">(opts)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-            <div class="method-calls-super">
-              Calls superclass method
-              
-            </div>
-          
-
-          
-          <div class="method-source-code" id="generic_opts-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 123</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generic_opts</span>(<span class="ruby-identifier">opts</span>)
-  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-string">&#39;-v&#39;</span>, <span class="ruby-string">&#39;--verbose&#39;</span>, <span class="ruby-string">&#39;Be verbose&#39;</span>) {
-    <span class="ruby-identifier">options</span>[<span class="ruby-value">:verbose</span>] = <span class="ruby-keyword">true</span>
-  }
-
-  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-string">&#39;-D&#39;</span>, <span class="ruby-string">&#39;--debug&#39;</span>, <span class="ruby-string">&quot;Print debug output; don&#39;t send any mails&quot;</span>) {
-    <span class="ruby-identifier">options</span>[<span class="ruby-value">:debug</span>] = <span class="ruby-keyword">true</span>
-  }
-
-  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">separator</span> <span class="ruby-string">&#39;&#39;</span>
-
-  <span class="ruby-keyword">super</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -375,32 +325,29 @@
 
           
           <div class="method-source-code" id="opts-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 96</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 95</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">opts</span>(<span class="ruby-identifier">opts</span>)
-  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-string">&#39;-d&#39;</span>, <span class="ruby-string">&#39;--directory DIRECTORY&#39;</span>, <span class="ruby-string">&#39;Process all feeds in directory&#39;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">option</span>(<span class="ruby-value">:directory__DIRECTORY</span>, <span class="ruby-string">&#39;Process all feeds in directory&#39;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">quit</span> <span class="ruby-node">&quot;#{dir}: No such file or directory&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span>(<span class="ruby-identifier">dir</span>)
     <span class="ruby-identifier">quit</span> <span class="ruby-node">&quot;#{dir}: Permission denied&quot;</span>         <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">dir</span>)
 
     <span class="ruby-identifier">options</span>[<span class="ruby-value">:files</span>] = <span class="ruby-constant">Dir</span>[<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">dir</span>, <span class="ruby-string">&#39;*.yaml&#39;</span>)]
   }
 
-  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">separator</span> <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">separator</span>
 
   <span class="ruby-node">%w[smtp lmtp]</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">type</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">klass</span> = <span class="ruby-constant">Transport</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">type</span>.<span class="ruby-identifier">upcase</span>)
 
-    <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-node">&quot;-#{type[0, 1]}&quot;</span>, <span class="ruby-node">&quot;--#{type} [HOST[:PORT]]&quot;</span>,
-            <span class="ruby-node">&quot;Send mail through #{type.upcase} server&quot;</span>,
+    <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-node">&quot;-#{type[0, 1]}&quot;</span>, <span class="ruby-node">&quot;--#{type} [HOST[:PORT]]&quot;</span>, <span class="ruby-node">&quot;Send mail through #{type.upcase} server&quot;</span>,
             <span class="ruby-node">&quot;[Default host: #{klass::DEFAULT_HOST}, default port: #{klass::DEFAULT_PORT}]&quot;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">host</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">options</span>[<span class="ruby-identifier">type</span>.<span class="ruby-identifier">to_sym</span>] = <span class="ruby-identifier">host</span>.<span class="ruby-identifier">to_s</span>
     }
   }
 
-  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">separator</span> <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">separator</span>
 
-  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-string">&#39;-r&#39;</span>, <span class="ruby-string">&#39;--reload&#39;</span>, <span class="ruby-string">&#39;Reload feeds&#39;</span>) {
-    <span class="ruby-identifier">options</span>[<span class="ruby-value">:reload</span>] = <span class="ruby-keyword">true</span>
-  }
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">switch</span>(<span class="ruby-value">:reload</span>, <span class="ruby-string">&#39;Reload feeds&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
