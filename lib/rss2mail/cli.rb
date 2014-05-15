@@ -68,9 +68,7 @@ module RSS2Mail
       }
 
       (options.delete(:files) || default_files).each { |feeds_file|
-        feeds = begin
-          SafeYAML.load_file(feeds_file, deserialize_symbols: true)
-        rescue Errno::ENOENT
+        feeds = RSS2Mail::Util.load_feeds(feeds_file) or begin
           warn "Feeds file not found: #{feeds_file}"
           next
         end
@@ -84,9 +82,7 @@ module RSS2Mail
           Feed.new(feed, options).deliver(templates) unless feed[:skip]
         }
 
-        unless options[:debug]
-          File.open(feeds_file, 'w') { |file| YAML.dump(feeds, file) }
-        end
+        RSS2Mail::Util.dump_feeds(feeds_file, feeds) unless options[:debug]
       }
     end
 

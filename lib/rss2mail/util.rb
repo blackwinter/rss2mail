@@ -26,6 +26,7 @@
 
 require 'open-uri'
 require 'nokogiri'
+require 'safe_yaml/load'
 
 require 'rss2mail/version'
 
@@ -59,6 +60,15 @@ module RSS2Mail
 
     def open_feed(url, options = {}, &block)
       open(url, options.merge('User-Agent' => USER_AGENT), &block)
+    end
+
+    def load_feeds(feeds_file)
+      return unless File.readable?(feeds_file)
+      SafeYAML.load_file(feeds_file, deserialize_symbols: true)
+    end
+
+    def dump_feeds(feeds_file, feeds)
+      File.open(feeds_file, 'w') { |file| YAML.dump(feeds, file) }
     end
 
   end
