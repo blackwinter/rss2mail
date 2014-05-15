@@ -114,13 +114,13 @@ module RSS2Mail
       end
 
       def date
-        @date ||= value_for({ :date => %w[pubDate updated dc_date] }, :content) { |field, value|
+        @date ||= value_for({ date: %w[pubDate updated dc_date] }, :content) { |field, value|
           field == 'updated' && value.respond_to?(:content) ? Time.at(value.content.to_i) : value
         }
       end
 
       def author
-        @author ||= value_for({ :author => %w[contributor dc_creator] }, %w[name content])
+        @author ||= value_for({ author: %w[contributor dc_creator] }, %w[name content])
       end
 
       def body(tag = nil, encoding = nil)
@@ -162,7 +162,7 @@ module RSS2Mail
       end
 
       def get_description(unescape_html)
-        description = value_for({ :description => %w[summary content] }, :content)
+        description = value_for({ description: %w[summary content] }, :content)
 
         if description && unescape_html
           description.gsub!(/&lt;/, '<')
@@ -196,7 +196,7 @@ module RSS2Mail
 
       def clean_subject(str)
         str.replace_diacritics!
-        str.gsub!(SUB_RE) { |m| SUB[m] }
+        str.gsub!(SUB_RE, SUB)
         str.to_ascii
       end
 
