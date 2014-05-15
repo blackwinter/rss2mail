@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Object - rss2mail Application documentation (v0.4.1)</title>
+<title>class Object - rss2mail Application documentation (v0.4.2)</title>
 
 <link href="./fonts.css" rel="stylesheet">
 <link href="./rdoc.css" rel="stylesheet">
@@ -75,6 +75,8 @@
     
     <li ><a href="#method-i-prepare">#prepare</a>
     
+    <li ><a href="#method-i-update">#update</a>
+    
   </ul>
 </div>
 
@@ -113,7 +115,7 @@
         
         <div class="method-heading">
           <span class="method-name">prepare</span><span
-            class="method-args">()</span>
+            class="method-args">(feed = true)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -128,14 +130,54 @@
 
           
           <div class="method-source-code" id="prepare-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/app.rb, line 72</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">prepare</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/app.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">prepare</span>(<span class="ruby-identifier">feed</span> = <span class="ruby-keyword">true</span>)
   <span class="ruby-identifier">user</span> = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">env</span>[<span class="ruby-string">&#39;REMOTE_USER&#39;</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">error</span>(<span class="ruby-value">400</span>)
 
   <span class="ruby-ivar">@feeds_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">settings</span>.<span class="ruby-identifier">root</span>, <span class="ruby-string">&#39;feeds.d&#39;</span>, <span class="ruby-node">&quot;#{user}.yaml&quot;</span>)
-  <span class="ruby-ivar">@feeds</span>      = <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-ivar">@feeds_file</span>) <span class="ruby-operator">?</span>
-    <span class="ruby-constant">SafeYAML</span>.<span class="ruby-identifier">load_file</span>(<span class="ruby-ivar">@feeds_file</span>, <span class="ruby-value">:deserialize_symbols</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>) <span class="ruby-operator">:</span> {}
+  <span class="ruby-ivar">@feeds</span>      = <span class="ruby-constant">RSS2Mail</span><span class="ruby-operator">::</span><span class="ruby-constant">Util</span>.<span class="ruby-identifier">load_feeds</span>(<span class="ruby-ivar">@feeds_file</span>) <span class="ruby-operator">||</span> {}
   <span class="ruby-ivar">@targets</span>    = <span class="ruby-ivar">@feeds</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">to_s</span> }
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">feed</span>
+    <span class="ruby-ivar">@feed_url</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:feed_url</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">error</span>(<span class="ruby-value">400</span>)
+
+    <span class="ruby-ivar">@target</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:target</span>]
+    <span class="ruby-ivar">@target</span> = <span class="ruby-ivar">@targets</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@target</span> } <span class="ruby-operator">||</span> <span class="ruby-value">:daily</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-update" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update</span><span
+            class="method-args">() { |feeds = feeds, find { |f| f == feed_url }| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="update-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/app.rb, line 92</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
+  <span class="ruby-keyword">yield</span> <span class="ruby-identifier">feeds</span> = <span class="ruby-ivar">@feeds</span>[<span class="ruby-ivar">@target</span>], <span class="ruby-identifier">feeds</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">f</span>[<span class="ruby-value">:url</span>] <span class="ruby-operator">==</span> <span class="ruby-ivar">@feed_url</span> }
+  <span class="ruby-constant">RSS2Mail</span><span class="ruby-operator">::</span><span class="ruby-constant">Util</span>.<span class="ruby-identifier">dump_feeds</span>(<span class="ruby-ivar">@feeds_file</span>, <span class="ruby-ivar">@feeds</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           

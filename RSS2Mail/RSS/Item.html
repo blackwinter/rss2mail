@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RSS2Mail::RSS::Item - rss2mail Application documentation (v0.4.1)</title>
+<title>class RSS2Mail::RSS::Item - rss2mail Application documentation (v0.4.2)</title>
 
 <link href="../../fonts.css" rel="stylesheet">
 <link href="../../rdoc.css" rel="stylesheet">
@@ -208,7 +208,7 @@
           <div class="method-source-code" id="author-source">
             <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 121</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">author</span>
-  <span class="ruby-ivar">@author</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">value_for</span>({ <span class="ruby-value">:author</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">%w[contributor dc_creator]</span> }, <span class="ruby-node">%w[name content]</span>)
+  <span class="ruby-ivar">@author</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">value_for</span>({ <span class="ruby-identifier">author</span><span class="ruby-operator">:</span> <span class="ruby-node">%w[contributor dc_creator]</span> }, <span class="ruby-node">%w[name content]</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -274,7 +274,7 @@
           <div class="method-source-code" id="date-source">
             <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 115</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">date</span>
-  <span class="ruby-ivar">@date</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">value_for</span>({ <span class="ruby-value">:date</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">%w[pubDate updated dc_date]</span> }, <span class="ruby-value">:content</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">field</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+  <span class="ruby-ivar">@date</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">value_for</span>({ <span class="ruby-identifier">date</span><span class="ruby-operator">:</span> <span class="ruby-node">%w[pubDate updated dc_date]</span> }, <span class="ruby-value">:content</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">field</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">field</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;updated&#39;</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:content</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">value</span>.<span class="ruby-identifier">content</span>.<span class="ruby-identifier">to_i</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">value</span>
   }
 <span class="ruby-keyword">end</span></pre>
@@ -452,7 +452,7 @@
             <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 196</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">clean_subject</span>(<span class="ruby-identifier">str</span>)
   <span class="ruby-identifier">str</span>.<span class="ruby-identifier">replace_diacritics!</span>
-  <span class="ruby-identifier">str</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-constant">SUB_RE</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-constant">SUB</span>[<span class="ruby-identifier">m</span>] }
+  <span class="ruby-identifier">str</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-constant">SUB_RE</span>, <span class="ruby-constant">SUB</span>)
   <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_ascii</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -566,7 +566,7 @@
           <div class="method-source-code" id="get_description-source">
             <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 163</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_description</span>(<span class="ruby-identifier">unescape_html</span>)
-  <span class="ruby-identifier">description</span> = <span class="ruby-identifier">value_for</span>({ <span class="ruby-value">:description</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">%w[summary content]</span> }, <span class="ruby-value">:content</span>)
+  <span class="ruby-identifier">description</span> = <span class="ruby-identifier">value_for</span>({ <span class="ruby-identifier">description</span><span class="ruby-operator">:</span> <span class="ruby-node">%w[summary content]</span> }, <span class="ruby-value">:content</span>)
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">description</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">unescape_html</span>
     <span class="ruby-identifier">description</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/&amp;lt;/</span>, <span class="ruby-string">&#39;&lt;&#39;</span>)

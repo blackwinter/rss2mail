@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RSS2Mail::Util - rss2mail Application documentation (v0.4.1)</title>
+<title>module RSS2Mail::Util - rss2mail Application documentation (v0.4.2)</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -67,6 +67,10 @@
   <ul class="link-list" role="directory">
     
     <li ><a href="#method-i-discover_feed">#discover_feed</a>
+    
+    <li ><a href="#method-i-dump_feeds">#dump_feeds</a>
+    
+    <li ><a href="#method-i-load_feeds">#load_feeds</a>
     
     <li ><a href="#method-i-open_feed">#open_feed</a>
     
@@ -148,7 +152,7 @@ href="http://www.rssboard.org/rss-autodiscovery">www.rssboard.org/rss-autodiscov
 
           
           <div class="method-source-code" id="discover_feed-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 45</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">discover_feed</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">or_self</span> = <span class="ruby-keyword">false</span>)
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">url</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;about:blank&#39;</span>
     <span class="ruby-identifier">doc</span> = <span class="ruby-constant">Nokogiri</span>.<span class="ruby-constant">HTML</span>(<span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">url</span>))
@@ -162,6 +166,73 @@ href="http://www.rssboard.org/rss-autodiscovery">www.rssboard.org/rss-autodiscov
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">url</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">or_self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-dump_feeds" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">dump_feeds</span><span
+            class="method-args">(feeds_file, feeds)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="dump_feeds-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 70</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">dump_feeds</span>(<span class="ruby-identifier">feeds_file</span>, <span class="ruby-identifier">feeds</span>)
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">feeds_file</span>, <span class="ruby-string">&#39;w&#39;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span> <span class="ruby-constant">YAML</span>.<span class="ruby-identifier">dump</span>(<span class="ruby-identifier">feeds</span>, <span class="ruby-identifier">file</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-load_feeds" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">load_feeds</span><span
+            class="method-args">(feeds_file)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="load_feeds-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 65</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_feeds</span>(<span class="ruby-identifier">feeds_file</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">feeds_file</span>)
+  <span class="ruby-constant">SafeYAML</span>.<span class="ruby-identifier">load_file</span>(<span class="ruby-identifier">feeds_file</span>, <span class="ruby-identifier">deserialize_symbols</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -192,7 +263,7 @@ href="http://www.rssboard.org/rss-autodiscovery">www.rssboard.org/rss-autodiscov
 
           
           <div class="method-source-code" id="open_feed-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 60</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">options</span> = {}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">open</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&#39;User-Agent&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">USER_AGENT</span>), <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
