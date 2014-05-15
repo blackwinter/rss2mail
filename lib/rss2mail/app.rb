@@ -5,7 +5,7 @@
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2013 Jens Wille                                          #
+# Copyright (C) 2007-2014 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <jens.wille@gmail.com>                                       #
@@ -28,12 +28,11 @@
 
 require 'sinatra'
 require 'rss2mail/util'
-require 'safe_yaml/load'
 
 use Rack::Auth::Basic do |user, pass|
   @auth ||= begin
-    file = File.join(settings.root, 'auth.yaml')
-    File.readable?(file) ? SafeYAML.load_file(file) : {}
+    auth_file = File.join(settings.root, 'auth.yaml')
+    File.readable?(auth_file) ? SafeYAML.load_file(auth_file) : {}
   end
 
   @auth[user] == pass
@@ -42,7 +41,7 @@ end
 helpers ERB::Util
 
 get '/' do
-  prepare
+  prepare(false)
 
   if @feed_url = RSS2Mail::Util.discover_feed(@url = params[:url])
     @title = Nokogiri.HTML(open(@feed_url)).at_css('title').content rescue nil
@@ -54,29 +53,46 @@ end
 post '/' do
   prepare
 
-  @feed_url = params[:feed_url] or error(400)
-
-  @target = params[:target]
-  @target = @targets.find { |t| t.to_s == @target } || :daily
-
   @title, @to = params[:title] || '', params[:to]
   @title = @feed_url[/[^\/]+\z/][/[\w.]+/] if @title.empty?
 
-  unless (feeds = @feeds[@target]).find { |f| f[:url] == @feed_url }
-    feeds << { :url => @feed_url, :title => @title, :to => @to }
-    File.open(@feeds_file, 'w') { |f| YAML.dump(@feeds, f) }
-  end
+  update { |feeds, feed|
+    new_feed = { url: @feed_url, title: @title, to: @to }
+    feed ? feed.update(new_feed) : feeds << new_feed
+  }
 
   erb :index
 end
 
-def prepare
+delete '/' do
+  prepare
+
+  update { |feeds, feed|
+    feeds.delete(feed) or error(404)
+    @title, @to = feed.values_at(:title, :to)
+  }
+
+  erb :index
+end
+
+def prepare(feed = true)
   user = request.env['REMOTE_USER'] or error(400)
 
   @feeds_file = File.join(settings.root, 'feeds.d', "#{user}.yaml")
-  @feeds      = File.readable?(@feeds_file) ?
-    SafeYAML.load_file(@feeds_file, :deserialize_symbols => true) : {}
+  @feeds      = RSS2Mail::Util.load_feeds(@feeds_file) || {}
   @targets    = @feeds.keys.sort_by { |t, _| t.to_s }
+
+  if feed
+    @feed_url = params[:feed_url] or error(400)
+
+    @target = params[:target]
+    @target = @targets.find { |t| t.to_s == @target } || :daily
+  end
+end
+
+def update
+  yield feeds = @feeds[@target], feeds.find { |f| f[:url] == @feed_url }
+  RSS2Mail::Util.dump_feeds(@feeds_file, @feeds)
 end
 
 __END__
@@ -91,19 +107,34 @@ __END__
 <% if settings.style %>
   <link rel="stylesheet" type="text/css" href="<%=h settings.style %>" />
 <% end %>
-  <style type="text/css">a.skip { text-decoration: line-through; }</style>
+  <style type="text/css">
+    a.skip {
+      text-decoration: line-through;
+    }
+
+    button {
+      background:  none;
+      border:      none;
+      cursor:      pointer;
+      color:       inherit;
+      font-size:   large;
+      font-weight: bold;
+      line-height: 0.6;
+      padding:     0;
+    }
+  </style>
 </head>
 <body>
-  <h1>rss2mail - send rss feeds as e-mail</h1>
+  <h1>rss2mail — send rss feeds as e-mail</h1>
 
   <h2>subscribe</h2>
 
   <form method="post">
-    <input type="text" id="feed_url" name="feed_url" value="<%= @feed_url || @url %>" size="54" />
+    <input type="text" id="feed_url" name="feed_url" value="<%=h @feed_url || @url %>" size="54" />
   <% if @url.nil? || @url.empty? %>
     <label for="feed_url">»url«</label>
   <% else %>
-    [<a href="<%= @url %>">link</a><% if @feed_url %> | <a href="<%= @feed_url %>">feed</a><% end %>]
+    [<a href="<%=h @url %>">link</a><% if @feed_url %> | <a href="<%=h @feed_url %>">feed</a><% end %>]
   <% end %>
     <br />
     <input type="text" id="title" name="title" value="<%=h @title %>" size="54" />
@@ -131,8 +162,14 @@ __END__
       <ul>
       <% for feed in @feeds[target].sort_by { |f| f[:title].downcase } %>
         <li>
-          <a href="<%= feed[:url] %>" class="<%= 'skip' if feed[:skip] %>"><%=h feed[:title] %></a>
-          <small>(<%=h Array(feed[:to]).join(', ') %>)</small>
+          <form method="post">
+            <a href="<%=h feed[:url] %>" class="<%= 'skip' if feed[:skip] %>"><%=h feed[:title] %></a>
+            <small>(<%=h Array(feed[:to]).join(', ') %>)</small>
+            <input type="hidden" name="_method"  value="delete" />
+            <input type="hidden" name="target"   value="<%=h target %>" />
+            <input type="hidden" name="feed_url" value="<%=h feed[:url] %>" />
+            <button type="submit" title="delete">×</button>
+          </form>
         </li>
       <% end %>
       </ul>
@@ -142,7 +179,7 @@ __END__
 
   <p><em>
     powered by <a href="http://blackwinter.github.com/rss2mail">RSS2Mail</a>
-    and <a href="http://sinatrarb.com">Sinatra</a> -- v<%=h RSS2Mail::VERSION %>
+    and <a href="http://sinatrarb.com">Sinatra</a> — v<%=h RSS2Mail::VERSION %>
   </em></p>
 </body>
 </html>
