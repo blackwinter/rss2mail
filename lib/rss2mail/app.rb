@@ -112,6 +112,11 @@ __END__
       text-decoration: line-through;
     }
 
+    input[type="submit"] {
+      margin-top:  0.6em;
+      font-weight: bold;
+    }
+
     button {
       background:  none;
       border:      none;
@@ -140,7 +145,12 @@ __END__
     <input type="text" id="title" name="title" value="<%=h @title %>" size="54" />
     <label for="title">»title«</label>
     <br />
-    <input type="text" id="to" name="to" value="<%=h @to %>" size="54" />
+    <input type="text" id="to" name="to" value="<%=h @to %>" size="54" list="tos" />
+    <datalist id="tos">
+    <% for to in @feeds.values.map { |feeds| feeds.map { |feed| feed[:to] } }.flatten.uniq.sort %>
+      <option value="<%=h to %>" />
+    <% end %>
+    </datalist>
     <label for="to">»to«</label>
     <br />
     <select id="target" name="target">
@@ -149,7 +159,7 @@ __END__
     <% end %>
     </select>
     <br />
-    <input type="submit" value="subscribe!" style="margin-top: 0.6em; font-weight: bold" />
+    <input type="submit" value="subscribe" />
   </form>
 
   <h2>subscriptions</h2>
