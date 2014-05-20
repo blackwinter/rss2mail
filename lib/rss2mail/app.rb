@@ -41,7 +41,7 @@ end
 helpers ERB::Util
 
 get '/' do
-  prepare(false)
+  prepare
 
   if @feed_url = RSS2Mail::Util.discover_feed(@url = params[:url])
     @title = Nokogiri.HTML(open(@feed_url)).at_css('title').content rescue nil
@@ -53,46 +53,46 @@ end
 post '/' do
   prepare
 
-  @title, @to = params[:title] || '', params[:to]
-  @title = @feed_url[/[^\/]+\z/][/[\w.]+/] if @title.empty?
+  @feed_url = params[:feed_url] or error(400)
 
-  update { |feeds, feed|
-    new_feed = { url: @feed_url, title: @title, to: @to }
-    feed ? feed.update(new_feed) : feeds << new_feed
-  }
+  @target = params[:target]
+  @target = @targets.find { |t| t.to_s == @target } || :daily
+
+  if params[:delete] == 'delete'
+    update { |feeds, feed| feeds.delete(feed) }
+  elsif params[:skip] == 'toggle'
+    update { |feeds, feed| feed[:skip] = !feed[:skip] }
+  else
+    @title, @to = params[:title] || '', params[:to]
+    @title = @feed_url[/[^\/]+\z/][/[\w.]+/] if @title.empty?
+
+    update(true) { |feeds, feed|
+      new_feed = { url: @feed_url, title: @title, to: @to }
+      feed ? feed.update(new_feed) : feeds << new_feed
+    }
+  end
 
   erb :index
 end
 
-delete '/' do
-  prepare
-
-  update { |feeds, feed|
-    feeds.delete(feed) or error(404)
-    @title, @to = feed.values_at(:title, :to)
-  }
-
-  erb :index
-end
-
-def prepare(feed = true)
+def prepare
   user = request.env['REMOTE_USER'] or error(400)
 
   @feeds_file = File.join(settings.root, 'feeds.d', "#{user}.yaml")
   @feeds      = RSS2Mail::Util.load_feeds(@feeds_file) || {}
   @targets    = @feeds.keys.sort_by { |t, _| t.to_s }
-
-  if feed
-    @feed_url = params[:feed_url] or error(400)
-
-    @target = params[:target]
-    @target = @targets.find { |t| t.to_s == @target } || :daily
-  end
 end
 
-def update
-  yield feeds = @feeds[@target], feeds.find { |f| f[:url] == @feed_url }
+def update(create = false)
+  feeds = @feeds[@target]
+
+  feed = feeds.find { |f| f[:url] == @feed_url }
+  error(404) unless feed || create
+
+  yield feeds, feed
+
   RSS2Mail::Util.dump_feeds(@feeds_file, @feeds)
+  @title, @to = feed.values_at(:title, :to) unless create
 end
 
 __END__
@@ -117,6 +117,12 @@ __END__
       font-weight: bold;
     }
 
+    input[type="submit"] + a {
+      margin-left: 2px;
+      font-weight: bold;
+      color:       inherit;
+    }
+
     button {
       background:  none;
       border:      none;
@@ -126,6 +132,10 @@ __END__
       font-weight: bold;
       line-height: 0.6;
       padding:     0;
+    }
+
+    small + button {
+      margin-left: 2px;
     }
   </style>
 </head>
@@ -160,6 +170,7 @@ __END__
     </select>
     <br />
     <input type="submit" value="subscribe" />
+    <a href="" title="clear">[×]</a>
   </form>
 
   <h2>subscriptions</h2>
@@ -173,12 +184,14 @@ __END__
       <% for feed in @feeds[target].sort_by { |f| f[:title].downcase } %>
         <li>
           <form method="post">
+            <input type="hidden" name="target" value="<%=h target %>" />
+            <input type="hidden" name="feed_url" value="<%=h feed[:url] %>" />
+
             <a href="<%=h feed[:url] %>" class="<%= 'skip' if feed[:skip] %>"><%=h feed[:title] %></a>
             <small>(<%=h Array(feed[:to]).join(', ') %>)</small>
-            <input type="hidden" name="_method"  value="delete" />
-            <input type="hidden" name="target"   value="<%=h target %>" />
-            <input type="hidden" name="feed_url" value="<%=h feed[:url] %>" />
-            <button type="submit" title="delete">×</button>
+
+            <button type="submit" name="skip" value="toggle" title="<%= feed[:skip] ? 'unskip' : 'skip' %>"><%= feed[:skip] ? '+' : '-' %></button>
+            <button type="submit" name="delete" value="delete" title="delete">×</button>
           </form>
         </li>
       <% end %>
