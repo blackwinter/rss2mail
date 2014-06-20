@@ -14,7 +14,7 @@ begin
       homepage:     :blackwinter,
       extra_files:  FileList['templates/*'].to_a,
       dependencies: %w[
-        cyclops nokogiri ruby-nuggets safe_yaml
+        cyclops nokogiri nuggets safe_yaml
         simple-rss sinatra unidecoder
       ],
 
