@@ -13,7 +13,7 @@ recipients. See <tt>example/</tt> directory for a sample configuration file.
 
 == LINKS
 
-Documentation:: https://blackwinter.github.io/rss2mail/
+Documentation:: https://blackwinter.github.com/rss2mail
 Source code::   https://github.com/blackwinter/rss2mail
 RubyGem::       https://rubygems.org/gems/rss2mail
 
