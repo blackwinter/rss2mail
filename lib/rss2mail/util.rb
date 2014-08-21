@@ -44,8 +44,8 @@ module RSS2Mail
 
     # cf. <http://www.rssboard.org/rss-autodiscovery>
     def discover_feed(url, or_self = false)
-      unless url.nil? || url.empty? || url == 'about:blank'
-        doc = Nokogiri.HTML(open_feed(url))
+      if url && !url.empty? && url != 'about:blank' && feed = open_feed(url)
+        doc = Nokogiri.HTML(feed)
 
         if link = doc.xpath('//link[@rel="alternate"]').find { |i| i[:type] =~ FEED_RE }
           if href = link[:href]
@@ -60,6 +60,8 @@ module RSS2Mail
 
     def open_feed(url, options = {}, &block)
       open(url, options.merge('User-Agent' => USER_AGENT), &block)
+    rescue => err
+      warn "Error while trying to open feed `#{url}': #{err} (#{err.class})"
     end
 
     def load_feeds(feeds_file)

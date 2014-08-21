@@ -170,7 +170,7 @@ __END__
     </select>
     <br />
     <input type="submit" value="subscribe" />
-    <a href="<%= url_for('/') %>" title="clear">[×]</a>
+    <a href="<%= url('/') %>" title="clear">[×]</a>
   </form>
 
   <h2>subscriptions</h2>
