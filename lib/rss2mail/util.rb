@@ -42,26 +42,32 @@ module RSS2Mail
 
     URI_RE = URI.regexp(%w[http https])
 
-    # cf. <http://www.rssboard.org/rss-autodiscovery>
-    def discover_feed(url, or_self = false)
-      if url && !url.empty? && url != 'about:blank' && feed = open_feed(url)
-        doc = Nokogiri.HTML(feed)
+    XPATH = '//link[@rel="alternate"]'
 
-        if link = doc.xpath('//link[@rel="alternate"]').find { |i| i[:type] =~ FEED_RE }
-          if href = link[:href]
-            return href =~ URI_RE ? href :
-              URI.join((base = doc.at_xpath('//base')) && base[:href] || url, href).to_s
-          end
+    # cf. <http://www.rssboard.org/rss-autodiscovery>
+    def discover_feed(url, fallback = false)
+      unless url.nil? || url.empty? || url == 'about:blank'
+        begin
+          doc = Nokogiri.HTML(open_feed(url))
+        rescue => err
+          warn "Unable to discover feed `#{url}': #{err} (#{err.class})"
+        else
+          doc.xpath(XPATH).each { |link|
+            if link[:type] =~ FEED_RE && href = link[:href]
+              return href =~ URI_RE ? href : begin
+                base = doc.at_xpath('//base')
+                URI.join(base && base[:href] || url, href).to_s
+              end
+            end
+          }
         end
       end
 
-      url if or_self
+      url if fallback
     end
 
     def open_feed(url, options = {}, &block)
       open(url, options.merge('User-Agent' => USER_AGENT), &block)
-    rescue => err
-      warn "Error while trying to open feed `#{url}': #{err} (#{err.class})"
     end
 
     def load_feeds(feeds_file)
