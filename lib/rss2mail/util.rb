@@ -24,9 +24,9 @@
 ###############################################################################
 #++
 
+require 'safe_yaml/store'
 require 'open-uri'
 require 'nokogiri'
-require 'safe_yaml/load'
 
 require 'rss2mail/version'
 
@@ -70,13 +70,14 @@ module RSS2Mail
       open(url, options.merge('User-Agent' => USER_AGENT), &block)
     end
 
-    def load_feeds(feeds_file)
-      return unless File.readable?(feeds_file)
-      SafeYAML.load_file(feeds_file, deserialize_symbols: true)
+    def load_feeds(feeds_file, options = { deserialize_symbols: true })
+      SafeYAML::Store.new(feeds_file, {}, options).tap { |store|
+        def store.get(key); transaction(true) { self[key] }; end
+      }
     end
 
-    def dump_feeds(feeds_file, feeds)
-      File.open(feeds_file, 'w') { |file| YAML.dump(feeds, file) }
+    def dump_feeds(store, key, value)
+      store.transaction { store[key] = value }
     end
 
   end

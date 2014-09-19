@@ -78,20 +78,27 @@ end
 def prepare
   user = request.env['REMOTE_USER'] or error(400)
 
-  @feeds_file = File.join(settings.root, 'feeds.d', "#{user}.yaml")
-  @feeds      = RSS2Mail::Util.load_feeds(@feeds_file) || {}
-  @targets    = @feeds.keys.sort_by { |t, _| t.to_s }
+  @feeds = RSS2Mail::Util.load_feeds(
+    File.join(settings.root, 'feeds.d', "#{user}.yaml"))
+
+  @tos = []
+
+  @feeds.transaction(true) {
+    @targets = @feeds.roots.sort_by(&:to_s).each { |target|
+      @feeds[target].each { |feed| @tos.concat(Array(feed[:to])) } } }
+
+  @tos.uniq!
 end
 
 def update(create = false)
-  feeds = @feeds[@target]
+  feeds = @feeds.get(@target)
 
   feed = feeds.find { |f| f[:url] == @feed_url }
   error(404) unless feed || create
 
   yield feeds, feed
 
-  RSS2Mail::Util.dump_feeds(@feeds_file, @feeds)
+  RSS2Mail::Util.dump_feeds(@feeds, @target, feeds)
   @title, @to = feed.values_at(:title, :to) unless create
 end
 
@@ -157,7 +164,7 @@ __END__
     <br />
     <input type="text" id="to" name="to" value="<%=h @to %>" size="54" list="tos" />
     <datalist id="tos">
-    <% for to in @feeds.values.map { |feeds| feeds.map { |feed| feed[:to] } }.flatten.uniq.sort %>
+    <% for to in @tos.sort %>
       <option value="<%=h to %>" />
     <% end %>
     </datalist>
@@ -176,12 +183,12 @@ __END__
   <h2>subscriptions</h2>
 
   <ul>
-  <% for target in @targets %>
+  <% for target in @targets; feeds = @feeds.get(target) %>
     <li>
-      <strong><%=h target %></strong> (<%= @feeds[target].size %>)
+      <strong><%=h target %></strong> (<%= feeds.size %>)
 
       <ul>
-      <% for feed in @feeds[target].sort_by { |f| f[:title].downcase } %>
+      <% for feed in feeds.sort_by { |f| f[:title].downcase } %>
         <li>
           <form method="post">
             <input type="hidden" name="target" value="<%=h target %>" />

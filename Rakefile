@@ -1,4 +1,4 @@
-require File.expand_path(%q{../lib/rss2mail/version}, __FILE__)
+require_relative 'lib/rss2mail/version'
 
 begin
   require 'hen'
@@ -14,9 +14,9 @@ begin
       homepage:     :blackwinter,
       extra_files:  FileList['templates/*'].to_a,
       dependencies: %w[
-        cyclops nokogiri nuggets safe_yaml
+        cyclops nokogiri nuggets
         simple-rss sinatra unidecoder
-      ],
+      ] << ['safe_yaml-store', '~> 0.0'],
 
       required_ruby_version: '>= 1.9.3'
     }

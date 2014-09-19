@@ -68,12 +68,14 @@ module RSS2Mail
       }
 
       (options.delete(:files) || default_files).each { |feeds_file|
-        feeds = RSS2Mail::Util.load_feeds(feeds_file) or begin
+        unless File.readable?(feeds_file)
           warn "Feeds file not found: #{feeds_file}"
           next
         end
 
-        unless target_feeds = feeds[target]
+        feeds = Util.load_feeds(feeds_file)
+
+        unless target_feeds = feeds.get(target)
           warn "Feeds target not found in #{feeds_file}: #{target}"
           next
         end
@@ -82,7 +84,7 @@ module RSS2Mail
           Feed.new(feed, options).deliver(templates) unless feed[:skip]
         }
 
-        RSS2Mail::Util.dump_feeds(feeds_file, feeds) unless options[:debug]
+        Util.dump_feeds(feeds, target, target_feeds) unless options[:debug]
       }
     end
 
