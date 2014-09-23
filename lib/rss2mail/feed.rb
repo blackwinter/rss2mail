@@ -130,7 +130,7 @@ module RSS2Mail
       end
     end
 
-    def get(reload = reload)
+    def get(reload = reload())
       conditions = {}
 
       if reload
@@ -180,7 +180,7 @@ module RSS2Mail
       content
     end
 
-    def parse(reload = reload)
+    def parse(reload = reload())
       @rss = nil if reload
 
       if content
@@ -230,7 +230,7 @@ module RSS2Mail
       error err, 'while sending mail', transport
     end
 
-    def log(msg, verbose = verbose)
+    def log(msg, verbose = verbose())
       warn "[#{feed[:title]}] #{msg}" if verbose
     end
 
