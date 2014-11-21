@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RSS2Mail::CLI - rss2mail Application documentation (v0.4.3)</title>
+<title>class RSS2Mail::CLI - rss2mail Application documentation (v0.4.4)</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -200,12 +200,14 @@
   }
 
   (<span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:files</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">default_files</span>).<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">feeds_file</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">feeds</span> = <span class="ruby-constant">RSS2Mail</span><span class="ruby-operator">::</span><span class="ruby-constant">Util</span>.<span class="ruby-identifier">load_feeds</span>(<span class="ruby-identifier">feeds_file</span>) <span class="ruby-keyword">or</span> <span class="ruby-keyword">begin</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">feeds_file</span>)
       <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Feeds file not found: #{feeds_file}&quot;</span>
       <span class="ruby-keyword">next</span>
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">target_feeds</span> = <span class="ruby-identifier">feeds</span>[<span class="ruby-identifier">target</span>]
+    <span class="ruby-identifier">feeds</span> = <span class="ruby-constant">Util</span>.<span class="ruby-identifier">load_feeds</span>(<span class="ruby-identifier">feeds_file</span>)
+
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">target_feeds</span> = <span class="ruby-identifier">feeds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">target</span>)
       <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Feeds target not found in #{feeds_file}: #{target}&quot;</span>
       <span class="ruby-keyword">next</span>
     <span class="ruby-keyword">end</span>
@@ -214,7 +216,7 @@
       <span class="ruby-constant">Feed</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">feed</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">deliver</span>(<span class="ruby-identifier">templates</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">feed</span>[<span class="ruby-value">:skip</span>]
     }
 
-    <span class="ruby-constant">RSS2Mail</span><span class="ruby-operator">::</span><span class="ruby-constant">Util</span>.<span class="ruby-identifier">dump_feeds</span>(<span class="ruby-identifier">feeds_file</span>, <span class="ruby-identifier">feeds</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:debug</span>]
+    <span class="ruby-constant">Util</span>.<span class="ruby-identifier">dump_feeds</span>(<span class="ruby-identifier">feeds</span>, <span class="ruby-identifier">target</span>, <span class="ruby-identifier">target_feeds</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:debug</span>]
   }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -287,7 +289,7 @@
 
           
           <div class="method-source-code" id="default_files-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 115</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 117</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">default_files</span>
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span>(<span class="ruby-identifier">dir</span> = <span class="ruby-constant">DEFAULT_FEEDS_PATH</span>) <span class="ruby-operator">?</span>
     <span class="ruby-constant">Dir</span>[<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">dir</span>, <span class="ruby-string">&#39;*.yaml&#39;</span>)] <span class="ruby-operator">:</span> [<span class="ruby-constant">DEFAULT_FEEDS_FILE</span>]
@@ -321,7 +323,7 @@
 
           
           <div class="method-source-code" id="opts-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 91</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/cli.rb, line 93</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">opts</span>(<span class="ruby-identifier">opts</span>)
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">option</span>(<span class="ruby-value">:directory__DIRECTORY</span>, <span class="ruby-string">&#39;Process all feeds in directory&#39;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">quit</span> <span class="ruby-node">&quot;#{dir}: No such file or directory&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span>(<span class="ruby-identifier">dir</span>)
@@ -363,7 +365,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

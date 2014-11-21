@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RSS2Mail::Util - rss2mail Application documentation (v0.4.3)</title>
+<title>module RSS2Mail::Util - rss2mail Application documentation (v0.4.4)</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -192,7 +192,7 @@ href="http://www.rssboard.org/rss-autodiscovery">www.rssboard.org/rss-autodiscov
         
         <div class="method-heading">
           <span class="method-name">dump_feeds</span><span
-            class="method-args">(feeds_file, feeds)</span>
+            class="method-args">(store, key, value)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -207,9 +207,9 @@ href="http://www.rssboard.org/rss-autodiscovery">www.rssboard.org/rss-autodiscov
 
           
           <div class="method-source-code" id="dump_feeds-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 78</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">dump_feeds</span>(<span class="ruby-identifier">feeds_file</span>, <span class="ruby-identifier">feeds</span>)
-  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">feeds_file</span>, <span class="ruby-string">&#39;w&#39;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span> <span class="ruby-constant">YAML</span>.<span class="ruby-identifier">dump</span>(<span class="ruby-identifier">feeds</span>, <span class="ruby-identifier">file</span>) }
+            <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 79</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">dump_feeds</span>(<span class="ruby-identifier">store</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">store</span>.<span class="ruby-identifier">transaction</span> { <span class="ruby-identifier">store</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -225,7 +225,7 @@ href="http://www.rssboard.org/rss-autodiscovery">www.rssboard.org/rss-autodiscov
         
         <div class="method-heading">
           <span class="method-name">load_feeds</span><span
-            class="method-args">(feeds_file)</span>
+            class="method-args">(feeds_file, options = { deserialize_symbols: true })</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -241,9 +241,10 @@ href="http://www.rssboard.org/rss-autodiscovery">www.rssboard.org/rss-autodiscov
           
           <div class="method-source-code" id="load_feeds-source">
             <pre><span class="ruby-comment"># File lib/rss2mail/util.rb, line 73</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_feeds</span>(<span class="ruby-identifier">feeds_file</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">feeds_file</span>)
-  <span class="ruby-constant">SafeYAML</span>.<span class="ruby-identifier">load_file</span>(<span class="ruby-identifier">feeds_file</span>, <span class="ruby-identifier">deserialize_symbols</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_feeds</span>(<span class="ruby-identifier">feeds_file</span>, <span class="ruby-identifier">options</span> = { <span class="ruby-identifier">deserialize_symbols</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span> })
+  <span class="ruby-constant">SafeYAML</span><span class="ruby-operator">::</span><span class="ruby-constant">Store</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">feeds_file</span>, {}, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">tap</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">store</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">store</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">key</span>); <span class="ruby-identifier">transaction</span>(<span class="ruby-keyword">true</span>) { <span class="ruby-keyword">self</span>[<span class="ruby-identifier">key</span>] }; <span class="ruby-keyword">end</span>
+  }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -296,7 +297,7 @@ href="http://www.rssboard.org/rss-autodiscovery">www.rssboard.org/rss-autodiscov
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
