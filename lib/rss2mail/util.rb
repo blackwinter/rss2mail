@@ -3,7 +3,7 @@
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2013 Jens Wille                                          #
+# Copyright (C) 2007-2015 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <jens.wille@gmail.com>                                       #
@@ -42,7 +42,11 @@ module RSS2Mail
 
     URI_RE = URI.regexp(%w[http https])
 
-    XPATH = '//link[@rel="alternate"]'
+    ALTERNATE_XPATH = '//link[@rel="alternate"]'
+
+    FACEBOOK_XPATH = '//div[starts-with(@id, "PageAuxContentPagelet_")]'
+
+    FACEBOOK_FEED = 'https://www.facebook.com/feeds/page.php?format=atom10&id='
 
     # cf. <http://www.rssboard.org/rss-autodiscovery>
     def discover_feed(url, fallback = false)
@@ -52,7 +56,7 @@ module RSS2Mail
         rescue => err
           warn "Unable to discover feed `#{url}': #{err} (#{err.class})"
         else
-          doc.xpath(XPATH).each { |link|
+          doc.xpath(ALTERNATE_XPATH).each { |link|
             if link[:type] =~ FEED_RE && href = link[:href]
               return href =~ URI_RE ? href : begin
                 base = doc.at_xpath('//base')
@@ -60,6 +64,10 @@ module RSS2Mail
               end
             end
           }
+
+          doc.xpath(FACEBOOK_XPATH).each { |node|
+            return FACEBOOK_FEED + node[:id][/\d+/]
+          } if url.include?('facebook.com')
         end
       end
 
