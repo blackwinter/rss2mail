@@ -4,7 +4,7 @@ module RSS2Mail
 
     MAJOR = 0
     MINOR = 4
-    TINY  = 4
+    TINY  = 5
 
     class << self
 
