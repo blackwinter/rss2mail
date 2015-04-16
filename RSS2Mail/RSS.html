@@ -4,21 +4,18 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RSS2Mail::RSS - rss2mail Application documentation (v0.4.4)</title>
-
-<link href="../fonts.css" rel="stylesheet">
-<link href="../rdoc.css" rel="stylesheet">
+<title>class RSS2Mail::RSS - rss2mail Application documentation (v0.4.5)</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
-<script src="../js/navigation.js"></script>
-<script src="../js/search_index.js"></script>
-<script src="../js/search.js"></script>
-<script src="../js/searcher.js"></script>
 <script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 <body id="top" role="document" class="class">
@@ -84,9 +81,11 @@
 
   <ul class="link-list" role="directory">
     
+    <li ><a href="#method-c-feed">::feed</a>
+    
     <li ><a href="#method-c-new">::new</a>
     
-    <li ><a href="#method-i-feed">#feed</a>
+    <li ><a href="#method-c-parse">::parse</a>
     
     <li ><a href="#method-i-items">#items</a>
     
@@ -190,6 +189,41 @@
        </header>
 
     
+      <div id="method-c-feed" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">feed</span><span
+            class="method-args">(*args) { |err| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="feed-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">feed</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">err</span>
+  <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">yield</span>(<span class="ruby-identifier">err</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">raise</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
       <div id="method-c-new" class="method-detail ">
         
         <div class="method-heading">
@@ -226,19 +260,11 @@
       </div>
 
     
-    </section>
-  
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
-       <header>
-         <h3>Public Instance Methods</h3>
-       </header>
-
-    
-      <div id="method-i-feed" class="method-detail ">
+      <div id="method-c-parse" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">feed</span><span
-            class="method-args">(*args) { |err| ... }</span>
+          <span class="method-name">parse</span><span
+            class="method-args">(url, *args)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -252,12 +278,10 @@
           
 
           
-          <div class="method-source-code" id="feed-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 56</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">feed</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-  <span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">err</span>
-  <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">yield</span>(<span class="ruby-identifier">err</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">raise</span>
+          <div class="method-source-code" id="parse-source">
+            <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span>(<span class="ruby-identifier">url</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-identifier">new</span>(<span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">url</span>), <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -267,6 +291,14 @@
 
         
       </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
 
     
       <div id="method-i-items" class="method-detail ">
@@ -306,7 +338,7 @@
         
         <div class="method-heading">
           <span class="method-name">parse</span><span
-            class="method-args">(url, *args)</span>
+            class="method-args">()</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -321,9 +353,9 @@
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 52</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span>(<span class="ruby-identifier">url</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-  <span class="ruby-identifier">new</span>(<span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">url</span>), <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+            <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 81</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span>
+  <span class="ruby-identifier">strict_parse</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">simple_parse</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -442,7 +474,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
