@@ -78,8 +78,12 @@ module RSS2Mail
       block_given? ? yield(doc) : doc
     end
 
-    def open_feed(url, options = {}, &block)
+    def open_feed(url, options = {}, tries = 10, &block)
       open(url, options.merge('User-Agent' => USER_AGENT), &block)
+    rescue RuntimeError => err
+      raise unless err.to_s.include?('redirection loop') && (tries -= 1) > 0
+      sleep 10 - tries
+      retry
     end
 
     def load_feeds(feeds_file, options = { deserialize_symbols: true })
