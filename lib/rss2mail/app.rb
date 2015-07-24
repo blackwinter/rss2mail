@@ -5,7 +5,7 @@
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2014 Jens Wille                                          #
+# Copyright (C) 2007-2015 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <jens.wille@gmail.com>                                       #
@@ -43,9 +43,10 @@ helpers ERB::Util
 get '/' do
   prepare
 
-  if @feed_url = RSS2Mail::Util.discover_feed(@url = params[:url])
-    @title = Nokogiri.HTML(open(@feed_url)).at_css('title').content rescue nil
-  end
+  @feed_url = RSS2Mail::Util.discover_feed(@url = params[:url])
+
+  RSS2Mail::Util.load_feed(@feed_url) { |doc|
+    @title = doc.at_css('title').content } if @feed_url
 
   erb :index
 end

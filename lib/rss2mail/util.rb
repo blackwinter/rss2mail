@@ -51,11 +51,7 @@ module RSS2Mail
     # cf. <http://www.rssboard.org/rss-autodiscovery>
     def discover_feed(url, fallback = false)
       unless url.nil? || url.empty? || url == 'about:blank'
-        begin
-          doc = Nokogiri.HTML(open_feed(url))
-        rescue => err
-          warn "Unable to discover feed `#{url}': #{err} (#{err.class})"
-        else
+        load_feed(url) { |doc|
           doc.xpath(ALTERNATE_XPATH).each { |link|
             if link[:type] =~ FEED_RE && href = link[:href]
               return href =~ URI_RE ? href : begin
@@ -68,10 +64,18 @@ module RSS2Mail
           doc.xpath(FACEBOOK_XPATH).each { |node|
             return FACEBOOK_FEED + node[:id][/\d+/]
           } if url.include?('facebook.com')
-        end
+        }
       end
 
       url if fallback
+    end
+
+    def load_feed(url)
+      doc = Nokogiri.HTML(open_feed(url))
+    rescue => err
+      warn "Unable to load feed `#{url}': #{err} (#{err.class})"
+    else
+      block_given? ? yield(doc) : doc
     end
 
     def open_feed(url, options = {}, &block)

@@ -174,12 +174,12 @@ module RSS2Mail
 
       def get_body(tag, encoding)
         body = case tag
-          when nil    then return
+          when nil    then # nothing
           when true   then open_feed(link).read
           when String then extract_body(tag)
           when Array  then extract_body(*tag)
           else raise ArgumentError, "don't know how to handle tag of type #{tag.class}"
-        end
+        end or return
 
         body.gsub!(/<\/?(.*?)>/) { |m| m if KEEP.include?($1.split.first.downcase) }
         body.gsub!(/<a\s+href=['"](?!http:).*?>(.*?)<\/a>/mi, '\1')
@@ -190,8 +190,8 @@ module RSS2Mail
       end
 
       def extract_body(expr, attribute = nil)
-        elem = Nokogiri.HTML(open_feed(link)).at(expr)
-        attribute ? elem[attribute] : elem.to_s
+        load_feed(link) { |doc| elem = doc.at(expr)
+          attribute ? elem[attribute] : elem.to_s }
       end
 
       def clean_subject(str)
