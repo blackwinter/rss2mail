@@ -95,7 +95,7 @@ module RSS2Mail
         send_mail(to, "[#{title}] #{subject}", body, type) {
           sent << link
           count += 1
-        }
+        } if link
       }
 
       sent.uniq!
@@ -218,6 +218,8 @@ module RSS2Mail
       log "<#{link}>", debug
 
       [link, subject, ERB.new(template).result(binding)]
+    rescue => err
+      error err, 'while rendering feed', title
     end
 
     def send_mail(*args)
