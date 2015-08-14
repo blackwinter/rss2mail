@@ -1,12 +1,12 @@
-Thu, 16 Apr 2015 16:05:44 +0200
-README	Thu, 16 Apr 2015 16:04:09 +0200
+Fri, 14 Aug 2015 14:30:45 +0200
+README	Mon, 03 Aug 2015 13:12:55 +0200
 COPYING	Tue, 09 Apr 2013 11:30:45 +0200
 ChangeLog	Tue, 16 Apr 2013 12:19:20 +0200
 lib/rss2mail.rb	Thu, 15 May 2014 14:51:55 +0200
-lib/rss2mail/app.rb	Tue, 23 Sep 2014 12:41:35 +0200
+lib/rss2mail/app.rb	Fri, 31 Jul 2015 11:40:20 +0200
 lib/rss2mail/cli.rb	Tue, 23 Sep 2014 12:41:35 +0200
-lib/rss2mail/rss.rb	Thu, 15 May 2014 15:01:04 +0200
-lib/rss2mail/feed.rb	Tue, 23 Sep 2014 12:41:35 +0200
-lib/rss2mail/util.rb	Thu, 16 Apr 2015 16:00:34 +0200
-lib/rss2mail/version.rb	Thu, 16 Apr 2015 16:03:52 +0200
+lib/rss2mail/rss.rb	Fri, 24 Jul 2015 09:35:07 +0200
+lib/rss2mail/feed.rb	Mon, 03 Aug 2015 13:12:55 +0200
+lib/rss2mail/util.rb	Fri, 31 Jul 2015 11:40:41 +0200
+lib/rss2mail/version.rb	Mon, 03 Aug 2015 13:12:55 +0200
 lib/rss2mail/transport.rb	Thu, 06 Mar 2014 13:56:21 +0100

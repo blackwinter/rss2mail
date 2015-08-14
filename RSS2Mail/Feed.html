@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RSS2Mail::Feed - rss2mail Application documentation (v0.4.5)</title>
+<title>class RSS2Mail::Feed - rss2mail Application documentation (v0.4.6)</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -388,7 +388,7 @@
     <span class="ruby-identifier">send_mail</span>(<span class="ruby-identifier">to</span>, <span class="ruby-node">&quot;[#{title}] #{subject}&quot;</span>, <span class="ruby-identifier">body</span>, <span class="ruby-identifier">type</span>) {
       <span class="ruby-identifier">sent</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">link</span>
       <span class="ruby-identifier">count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
-    }
+    } <span class="ruby-keyword">if</span> <span class="ruby-identifier">link</span>
   }
 
   <span class="ruby-identifier">sent</span>.<span class="ruby-identifier">uniq!</span>
@@ -434,7 +434,7 @@
 
           
           <div class="method-source-code" id="error-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 237</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 239</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">error</span>(<span class="ruby-identifier">err</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">occasion</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">extra</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">msg</span> = <span class="ruby-string">&#39;Error&#39;</span>
 
@@ -554,7 +554,7 @@
 
           
           <div class="method-source-code" id="log-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 233</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 235</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">log</span>(<span class="ruby-identifier">msg</span>, <span class="ruby-identifier">verbose</span> = <span class="ruby-identifier">verbose</span>())
   <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;[#{feed[:title]}] #{msg}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">verbose</span>
 <span class="ruby-keyword">end</span></pre>
@@ -655,6 +655,8 @@
   <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;&lt;#{link}&gt;&quot;</span>, <span class="ruby-identifier">debug</span>
 
   [<span class="ruby-identifier">link</span>, <span class="ruby-identifier">subject</span>, <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">template</span>).<span class="ruby-identifier">result</span>(<span class="ruby-identifier">binding</span>)]
+<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">err</span>
+  <span class="ruby-identifier">error</span> <span class="ruby-identifier">err</span>, <span class="ruby-string">&#39;while rendering feed&#39;</span>, <span class="ruby-identifier">title</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -685,7 +687,7 @@
 
           
           <div class="method-source-code" id="send_mail-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 223</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/feed.rb, line 225</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">send_mail</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">debug</span>
 

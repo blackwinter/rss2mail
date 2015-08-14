@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RSS2Mail::RSS::Item - rss2mail Application documentation (v0.4.5)</title>
+<title>class RSS2Mail::RSS::Item - rss2mail Application documentation (v0.4.6)</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -483,8 +483,8 @@
           <div class="method-source-code" id="extract_body-source">
             <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 191</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">extract_body</span>(<span class="ruby-identifier">expr</span>, <span class="ruby-identifier">attribute</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">elem</span> = <span class="ruby-constant">Nokogiri</span>.<span class="ruby-constant">HTML</span>(<span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">link</span>)).<span class="ruby-identifier">at</span>(<span class="ruby-identifier">expr</span>)
-  <span class="ruby-identifier">attribute</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">elem</span>[<span class="ruby-identifier">attribute</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">elem</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">load_feed</span>(<span class="ruby-identifier">link</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">doc</span><span class="ruby-operator">|</span> <span class="ruby-identifier">elem</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">expr</span>)
+    <span class="ruby-identifier">attribute</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">elem</span>[<span class="ruby-identifier">attribute</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">elem</span>.<span class="ruby-identifier">to_s</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -518,12 +518,12 @@
             <pre><span class="ruby-comment"># File lib/rss2mail/rss.rb, line 174</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_body</span>(<span class="ruby-identifier">tag</span>, <span class="ruby-identifier">encoding</span>)
   <span class="ruby-identifier">body</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">tag</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-keyword">nil</span>    <span class="ruby-keyword">then</span> <span class="ruby-keyword">return</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-keyword">nil</span>    <span class="ruby-keyword">then</span> <span class="ruby-comment"># nothing</span>
     <span class="ruby-keyword">when</span> <span class="ruby-keyword">true</span>   <span class="ruby-keyword">then</span> <span class="ruby-identifier">open_feed</span>(<span class="ruby-identifier">link</span>).<span class="ruby-identifier">read</span>
     <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">extract_body</span>(<span class="ruby-identifier">tag</span>)
     <span class="ruby-keyword">when</span> <span class="ruby-constant">Array</span>  <span class="ruby-keyword">then</span> <span class="ruby-identifier">extract_body</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">tag</span>)
     <span class="ruby-keyword">else</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;don&#39;t know how to handle tag of type #{tag.class}&quot;</span>
-  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span>
 
   <span class="ruby-identifier">body</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/&lt;\/?(.*?)&gt;/</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">KEEP</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-node">$1</span>.<span class="ruby-identifier">split</span>.<span class="ruby-identifier">first</span>.<span class="ruby-identifier">downcase</span>) }
   <span class="ruby-identifier">body</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/&lt;a\s+href=[&#39;&quot;](?!http:).*?&gt;(.*?)&lt;\/a&gt;/mi</span>, <span class="ruby-string">&#39;\1&#39;</span>)

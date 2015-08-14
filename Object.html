@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Object - rss2mail Application documentation (v0.4.5)</title>
+<title>class Object - rss2mail Application documentation (v0.4.6)</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
@@ -127,7 +127,7 @@
 
           
           <div class="method-source-code" id="prepare-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/app.rb, line 77</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/app.rb, line 78</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">prepare</span>
   <span class="ruby-identifier">user</span> = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">env</span>[<span class="ruby-string">&#39;REMOTE_USER&#39;</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">error</span>(<span class="ruby-value">400</span>)
 
@@ -171,7 +171,7 @@
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File lib/rss2mail/app.rb, line 92</span>
+            <pre><span class="ruby-comment"># File lib/rss2mail/app.rb, line 93</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">create</span> = <span class="ruby-keyword">false</span>)
   <span class="ruby-identifier">feeds</span> = <span class="ruby-ivar">@feeds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-ivar">@target</span>)
 
