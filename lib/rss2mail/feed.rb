@@ -3,7 +3,7 @@
 #                                                                             #
 # A component of rss2mail, the RSS to e-mail forwarder.                       #
 #                                                                             #
-# Copyright (C) 2007-2014 Jens Wille                                          #
+# Copyright (C) 2007-2016 Jens Wille                                          #
 #                                                                             #
 # Authors:                                                                    #
 #     Jens Wille <jens.wille@gmail.com>                                       #
@@ -30,7 +30,7 @@ module RSS2Mail
 
     include Util
 
-    KEEP = 100
+    KEEP = Integer(ENV['RSS2MAIL_KEEP'] || 100)
 
     def initialize(feed, options = {})
       raise TypeError, "Hash expected, got #{feed.class}" unless feed.is_a?(Hash)
